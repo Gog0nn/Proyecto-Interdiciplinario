@@ -1,9 +1,11 @@
+name: nuevo_trabajo_devcontainer
+
 version: '3.8'
 services:
   php-apache:
     build: ./php-apache
     ports:
-      - "8080:80"
+      - "8090:80"
     volumes:
       - ..:/var/www/html
     depends_on:
@@ -15,7 +17,7 @@ services:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: testdb
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mariadb_data:/var/lib/mysql   # Volumen persistente
 
@@ -25,7 +27,7 @@ services:
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "8081:80"
+      - "8091:80"
     depends_on:
       - mariadb
 

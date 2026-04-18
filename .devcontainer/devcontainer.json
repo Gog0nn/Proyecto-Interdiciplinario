@@ -1,8 +1,19 @@
 {
   "name": "Nuevo Trabajo - PHP 8.1 Apache + MariaDB + phpMyAdmin",
-  "dockerComposeFile": "nuevo-trabajo/docker-compose.yml",
+  "dockerComposeFile": "docker-compose.yml",
   "service": "php-apache",
   "workspaceFolder": "/var/www/html",
+  "forwardPorts": [8090, 8091],
+  "portsAttributes": {
+    "8090": {
+      "label": "Apache",
+      "protocol": "http"
+    },
+    "8091": {
+      "label": "phpMyAdmin",
+      "protocol": "http"
+    }
+  },
   "customizations": {
     "vscode": {
       "settings": {
