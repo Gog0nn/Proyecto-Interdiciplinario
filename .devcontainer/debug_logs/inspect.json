@@ -1,0 +1,258 @@
+[
+    {
+        "Id": "ff233373ce42ddda824aab40412fd93f06b0d1913c36a67073e8d76b6fca991c",
+        "Created": "2026-04-18T22:18:48.634494272Z",
+        "Path": "docker-php-entrypoint",
+        "Args": [
+            "apache2-foreground"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 6572,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-04-18T22:18:50.131283784Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:71acc009f43c82bfbc8ee7723e508489b9ace444dd567354d3c74c6393a7af51",
+        "ResolvConfPath": "/var/lib/docker/containers/ff233373ce42ddda824aab40412fd93f06b0d1913c36a67073e8d76b6fca991c/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/ff233373ce42ddda824aab40412fd93f06b0d1913c36a67073e8d76b6fca991c/hostname",
+        "HostsPath": "/var/lib/docker/containers/ff233373ce42ddda824aab40412fd93f06b0d1913c36a67073e8d76b6fca991c/hosts",
+        "LogPath": "/var/lib/docker/containers/ff233373ce42ddda824aab40412fd93f06b0d1913c36a67073e8d76b6fca991c/ff233373ce42ddda824aab40412fd93f06b0d1913c36a67073e8d76b6fca991c-json.log",
+        "Name": "/proyecto_basquet-php-apache-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "c:\\2026\\proyecto_basquet:/var/www/html:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "proyecto_basquet_default",
+            "PortBindings": {
+                "80/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "c:\\2026\\proyecto_basquet",
+                "Destination": "/var/www/html",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "ff233373ce42",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "80/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PHPIZE_DEPS=autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+                "PHP_INI_DIR=/usr/local/etc/php",
+                "APACHE_CONFDIR=/etc/apache2",
+                "APACHE_ENVVARS=/etc/apache2/envvars",
+                "PHP_CFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_CPPFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_LDFLAGS=-Wl,-O1 -pie",
+                "GPG_KEYS=528995BFEDFBA7191D46839EF9BA0ADA31CBD89E 39B641343D8C104B2B146DC3F9C39DC0B9698544 F1F692238FBC1666E5A5CCD4199F9DFEF6FFBAFD",
+                "PHP_VERSION=8.1.34",
+                "PHP_URL=https://www.php.net/distributions/php-8.1.34.tar.xz",
+                "PHP_ASC_URL=https://www.php.net/distributions/php-8.1.34.tar.xz.asc",
+                "PHP_SHA256=ffa9e0982e82eeaea848f57687b425ed173aa278fe563001310ae2638db5c251"
+            ],
+            "Cmd": [
+                "apache2-foreground"
+            ],
+            "Image": "proyecto_basquet-php-apache",
+            "Volumes": null,
+            "WorkingDir": "/var/www/html",
+            "Entrypoint": [
+                "docker-php-entrypoint"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "a5eb006f227ddf3587303d73e38281487a4f74592105d70d78b2e926904a7645",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "mariadb:service_started:false",
+                "com.docker.compose.image": "sha256:71acc009f43c82bfbc8ee7723e508489b9ace444dd567354d3c74c6393a7af51",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "proyecto_basquet",
+                "com.docker.compose.project.config_files": "c:\\2026\\proyecto_basquet\\.devcontainer\\docker-compose.yml",
+                "com.docker.compose.project.working_dir": "c:\\2026\\proyecto_basquet\\.devcontainer",
+                "com.docker.compose.service": "php-apache",
+                "com.docker.compose.version": "5.1.0"
+            },
+            "StopSignal": "SIGWINCH",
+            "StopTimeout": 1
+        },
+        "NetworkSettings": {
+            "SandboxID": "177b896d72aab545a23812daba04b71b9b59bc9f7865c711f748c1285426281c",
+            "SandboxKey": "/var/run/docker/netns/177b896d72aa",
+            "Ports": {
+                "80/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "8080"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "Networks": {
+                "proyecto_basquet_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "proyecto_basquet-php-apache-1",
+                        "php-apache"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "2d8e64c60e526ff0fa0197e5a552f7e7a73d37c8c036ad1134221b4456a355a4",
+                    "EndpointID": "f48e55681766d9fecdb01a38eb989924d08527874e613bdc64932672b0be9087",
+                    "Gateway": "172.18.0.1",
+                    "IPAddress": "172.18.0.4",
+                    "MacAddress": "a6:ad:c5:13:4b:37",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "proyecto_basquet-php-apache-1",
+                        "php-apache",
+                        "ff233373ce42"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:54e5fd00c4298b8e63d64a39fbbaa155a8fe5f598d5e58368f1d1cb25a72b2a3",
+            "size": 3516,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]
