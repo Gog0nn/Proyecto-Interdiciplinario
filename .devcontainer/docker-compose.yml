@@ -1,6 +1,7 @@
 name: nuevo_trabajo_devcontainer
 
 version: '3.8'
+
 services:
   php-apache:
     build: ./php-apache
@@ -15,11 +16,12 @@ services:
     image: mariadb:10.11
     environment:
       MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: testdb
+      MARIADB_DATABASE: basquet_bd
     ports:
       - "3307:3306"
     volumes:
-      - mariadb_data:/var/lib/mysql   # Volumen persistente
+      - mariadb_data:/var/lib/mysql
+      - ../db:/docker-entrypoint-initdb.d
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -32,4 +34,4 @@ services:
       - mariadb
 
 volumes:
-  mariadb_data:   # Volumen nombrado para persistencia
+  mariadb_data:
