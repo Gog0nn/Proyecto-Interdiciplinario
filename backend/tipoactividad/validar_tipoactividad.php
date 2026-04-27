@@ -1,7 +1,7 @@
 <?php
 require_once "helpers.php";
 
-function validarActividad($data) {
+function validarTipoActividad($data) {
     $errores = [];
 
     $descripcion = $data['descripcion'] ?? '';
@@ -13,5 +13,6 @@ function validarActividad($data) {
     } elseif (!longitudMaxima($descripcion, 150)) {
         $errores[] = "La descripción no puede superar 150 caracteres";
     }
+    return $errores;
 }
 ?>
