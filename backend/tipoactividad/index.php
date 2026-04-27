@@ -7,7 +7,7 @@ $errores = [];
 $exito = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $errores = validarActividad($_POST);
+    $errores = validarTipoActividad($_POST);
 
     if (empty($errores)) {
         $descripcion = mysqli_real_escape_string($con, $_POST['descripcion']);
