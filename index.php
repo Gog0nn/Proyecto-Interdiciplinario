@@ -1,26 +1,9 @@
 <?php
-// Saludo simple para probar el stack
+require_once 'conex.php';
 echo "<h1>PROYECTO INTERDICIPLINARIO</h1>";
-
-// Mostrar información de conexión a MariaDB (ejemplo)
-$host = 'mariadb';   // nombre del servicio en docker-compose
-$user = 'root';
-$pass = 'root';
-$db   = 'basquet_bd';
-
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    echo "<p style='color:red;'>Error de conexión a MariaDB: " . $conn->connect_error . "</p>";
-} else {
-    echo "<p style='color:green;'>Conexión a MariaDB exitosa</p>";
-}
-
+$conn = Conex();
+echo "<p style='color:green;'>Conexión a MariaDB exitosa</p>";
 $conn->close();
-?>
-<?php
-
-// Obtener todos los elementos de la carpeta actual
 $items = scandir(__DIR__);
 
 // Filtrar solo directorios válidos
