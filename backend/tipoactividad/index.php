@@ -6,6 +6,15 @@ $con = Conex();
 $errores = [];
 $exito = "";
 
+// --- AQUÍ CAPTURAMOS LOS MENSAJES DE ELIMINAR.PHP ---
+if (isset($_GET['error'])) {
+    $errores[] = $_GET['error'];
+}
+if (isset($_GET['exito'])) {
+    $exito = $_GET['exito'];
+}
+// ---------------------------------------------------
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errores = validarTipoActividad($_POST);
 
@@ -36,16 +45,23 @@ $query = mysqli_query($con, $sql);
     <div style="text-align: center;">
         <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
             <h1>Nuevo Tipo de Actividad</h1>
+            
             <?php if (!empty($errores)): ?>
-                <ul style="color:red;">
-                    <?php foreach ($errores as $error): ?>
-                        <li><?= $error ?></li>
-                    <?php endforeach; ?>
-                </ul>
+                <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border: 1px solid #f5c6cb; border-radius: 4px; display: inline-block; text-align: left; margin-bottom: 15px;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <?php foreach ($errores as $error): ?>
+                            <li><?= htmlspecialchars($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <br>
             <?php endif; ?>
 
             <?php if ($exito): ?>
-                <p style="color:green;"><?= $exito ?></p>
+                <div style="background-color: #d4edda; color: #155724; padding: 10px; border: 1px solid #c3e6cb; border-radius: 4px; display: inline-block; margin-bottom: 15px;">
+                    <strong><?= htmlspecialchars($exito) ?></strong>
+                </div>
+                <br>
             <?php endif; ?>
 
             <input type="text" name="descripcion" placeholder="Descripción"
@@ -54,10 +70,9 @@ $query = mysqli_query($con, $sql);
         </form>
     </div>
 
-    <div style="text-align: center;">
+    <div style="text-align: center; margin-top: 30px;">
         <h2>Lista de Tipos de Actividad</h2>
-        <table border="1" style="margin: 0 auto; width: 50%;">>
-            <thead>
+        <table border="1" style="margin: 0 auto; width: 50%;"> <thead>
                 <tr>
                     <th>ID</th>
                     <th>Descripción</th>
@@ -71,7 +86,7 @@ $query = mysqli_query($con, $sql);
                     <td><?= $row["id_tipo"] ?></td>
                     <td><?= htmlspecialchars($row["descripcion"]) ?></td>
                     <td><a href="editar.php?id=<?= $row["id_tipo"] ?>">Editar</a></td>
-                    <td><a href="eliminar.php?id=<?= $row["id_tipo"] ?>">Eliminar</a></td>
+                    <td><a href="eliminar.php?id=<?= $row["id_tipo"] ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este tipo de actividad?');">Eliminar</a></td>
                 </tr>
                 <?php endwhile; ?>
             </tbody>
