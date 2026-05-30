@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($errores)) {
         $descripcion = mysqli_real_escape_string($con, $_POST['descripcion']);
-        $sql = "INSERT INTO tipo_actividad (descripcion) VALUES ('$descripcion')";
+        $sql = "INSERT INTO TipoActividad (descripcion) VALUES ('$descripcion')";
         
         if (mysqli_query($con, $sql)) {
             $exito = "Tipo de actividad agregado correctamente";
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$sql = "SELECT * FROM tipo_actividad";
+$sql = "SELECT * FROM TipoActividad";
 $query = mysqli_query($con, $sql);
 ?>
 
@@ -68,10 +68,10 @@ $query = mysqli_query($con, $sql);
             <tbody>
                 <?php while ($row = mysqli_fetch_array($query)): ?>
                 <tr>
-                    <td><?= $row["id"] ?></td>
+                    <td><?= $row["id_tipo"] ?></td>
                     <td><?= htmlspecialchars($row["descripcion"]) ?></td>
-                    <td><a href="editar.php?id=<?= $row["id"] ?>">Editar</a></td>
-                    <td><a href="eliminar.php?id=<?= $row["id"] ?>">Eliminar</a></td>
+                    <td><a href="editar.php?id=<?= $row["id_tipo"] ?>">Editar</a></td>
+                    <td><a href="eliminar.php?id=<?= $row["id_tipo"] ?>">Eliminar</a></td>
                 </tr>
                 <?php endwhile; ?>
             </tbody>

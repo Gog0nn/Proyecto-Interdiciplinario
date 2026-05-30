@@ -3,7 +3,7 @@ function Conex(): mysqli {
     $host = 'mariadb';
     $user = 'root';
     $pass = 'root';
-    $db   = 'basquet_db';
+    $db   = 'gestion_deportiva';
 
     $conn = new mysqli($host, $user, $pass, $db);
 

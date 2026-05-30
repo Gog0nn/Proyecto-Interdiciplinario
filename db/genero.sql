@@ -10,9 +10,6 @@ CREATE DATABASE IF NOT EXISTS gestion_deportiva
 
 USE gestion_deportiva;
 
--- ============================================================
---  TABLAS BASE (sin dependencias externas)
--- ============================================================
 
 CREATE TABLE Categoria (
     id_categoria  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
@@ -183,12 +180,13 @@ INSERT INTO EntCatGen (id_entrenador, id_categoria, id_genero) VALUES
 INSERT INTO Jugadores (apellido, nombre, CI, fecha_nac, nro_contacto, genero, direccion, lugar_nac, tipo_sangre) VALUES
     ('López',   'Andrés', '6123456', '2014-06-10', '0984111222', 1, 'Av. Principal 123', 'Encarnación', 'O+'),
     ('Benítez', 'Sofía',  '6234567', '2013-09-22', '0984222333', 2, 'Calle 5 de Mayo 45', 'Encarnación', 'A+'),
+    ('Benítez', 'Fatima',  '5234567', '2000-09-22', '0984222333', 2, 'Calle 5 de Mayo 45', 'Encarnación', 'A+'),
     ('Torres',  'Diego',  '6345678', '2012-01-15', '0984333444', 1, 'San Roque 78', 'Posadas', 'B+');
 
 INSERT INTO Tutores (apellido, nombre, contacto, id_jugador) VALUES
     ('López',   'Roberto', '0985111000', 1),
     ('Benítez', 'María',   '0985222000', 2),
-    ('Torres',  'Jorge',   '0985333000', 3);
+    ('Torres',  'Jorge',   '0985333000', 4);
 
 INSERT INTO Actividad (nombre, descripcion, fecha, hora, lugar, id_genero, id_categoria, id_tipo) VALUES
     ('Práctica Técnica',  'Entrenamiento de técnica individual',    '2026-05-10', '08:00:00', 'Cancha A', 1, 1, 1),

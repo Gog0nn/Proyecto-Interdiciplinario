@@ -1,12 +1,29 @@
+<?php
+require_once __DIR__ . "/../../db/lib/conex.php";
+require_once __DIR__ . "/../../backend/genero/genero.php";
+ 
+
+
+$con = Conex();
+$categorias = [];
+$result = $con->query("SELECT * FROM Categoria ORDER BY edad ASC");
+while ($row = $result->fetch_assoc()) {
+    $categorias[] = $row;
+}
+$con->close();
+
+$generos = getAll();
+?>
 <aside class="col-2 p-3">
     <div class="mb-3">Acciones</div>
     <div class="list-group">
-        <!-- Ítem con colapsable -->
-        <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#inicioSesion">
+
+        <!-- Inicio de sesión -->
+        <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                type="button" data-bs-toggle="collapse" data-bs-target="#inicioSesion">
             <span><i class="bi bi-calendar-event"></i> Inicio de sesión</span>
             <i class="bi bi-chevron-down small"></i>
         </button>
-        
         <div class="collapse" id="inicioSesion">
             <div class="list-group list-group-flush ps-3 bg-light">
                 <form action=" " class="p-3">
@@ -22,46 +39,45 @@
                 </form>
             </div>
         </div>
-<!-- Nivel 1: El botón principal de Categorías -->
-<button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMaster">
-    <span><i class="bi bi-tags"></i> Categorías</span>
-    <i class="bi bi-chevron-down small"></i>
-</button>
 
-<!-- Nivel 1: El contenedor que se abre -->
-    <div class="collapse" id="categoriasMaster">
-    <div class="list-group list-group-flush ps-3">
-        
-        <!-- Nivel 2: Botón de Masculinos (dentro del anterior) -->
-        <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#subMasculino">
-            <span>Masculinos</span>
-            <i class="bi bi-chevron-right small"></i>
+        <!-- Categorías por género (dinámico desde BD) -->
+        <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                type="button" data-bs-toggle="collapse" data-bs-target="#categoriasMaster">
+            <span><i class="bi bi-tags"></i> Categorías</span>
+            <i class="bi bi-chevron-down small"></i>
         </button>
-        
-        <!-- Nivel 2: El contenedor de las sub-categorías -->
-        <div class="collapse" id="subMasculino">
-            <div class="list-group list-group-flush ps-3 border-start">
-                <a href="#" class="list-group-item list-group-item-action border-0 py-1 small italic">Sub 13</a>
-                <a href="#" class="list-group-item list-group-item-action border-0 py-1 small italic">Sub 15</a>
+        <div class="collapse" id="categoriasMaster">
+            <div class="list-group list-group-flush ps-3">
+
+                <?php foreach ($generos as $g): ?>
+                <?php
+                    // Saltar "Mixto" del aside, solo Masculino y Femenino
+                    if ($g['id_genero'] == 3) continue;
+                    $targetId = "subGenero" . $g['id_genero'];
+                ?>
+                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 py-1"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#<?= $targetId ?>">
+                    <span><?= htmlspecialchars($g['descripcion']) ?>s</span>
+                    <i class="bi bi-chevron-right small"></i>
+                </button>
+                <div class="collapse" id="<?= $targetId ?>">
+                    <div class="list-group list-group-flush ps-3 border-start">
+                        <?php foreach ($categorias as $cat): ?>
+                        <a href="/frontend/views/jugadores.php?genero=<?= $g['id_genero'] ?>&categoria=<?= $cat['id_categoria'] ?>"
+                           class="list-group-item list-group-item-action border-0 py-1 small">
+                            <?= htmlspecialchars($cat['descripcion']) ?>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+
             </div>
         </div>
-                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#subFemenino">
-            <span>Femeninos</span>
-            <i class="bi bi-chevron-right small"></i>
-        </button>
-        
-        <!-- Nivel 2: El contenedor de las sub-categorías -->
-        <div class="collapse" id="subFemenino">
-            <div class="list-group list-group-flush ps-3 border-start">
-                <a href="#" class="list-group-item list-group-item-action border-0 py-1 small italic">Sub 13</a>
-                <a href="#" class="list-group-item list-group-item-action border-0 py-1 small italic">Sub 15</a>
-            </div>
-        </div>
+
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="bi bi-gear"></i> Cerrar sesión
+        </a>
 
     </div>
-    </div>
-    <a href="#" class="list-group-item list-group-item-action"><i class="bi bi-gear"></i> Cerrar sesión</a>
-</div>
-
 </aside>
-

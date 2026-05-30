@@ -16,7 +16,7 @@ services:
     image: mariadb:10.11
     environment:
       MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: basquet_bd
+      MARIADB_DATABASE: gestion_deportiva
     ports:
       - "3307:3306"
     volumes:

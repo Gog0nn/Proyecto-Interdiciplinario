@@ -6,7 +6,7 @@ $con = Conex();
 $id = $_GET["id"];
 $errores = [];
 
-$query = mysqli_query($con, "SELECT * FROM tipo_actividad WHERE id = $id");
+$query = mysqli_query($con, "SELECT * FROM TipoActividad WHERE id_tipo = $id");
 $row = mysqli_fetch_assoc($query);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($errores)) {
         $descripcion = mysqli_real_escape_string($con, $_POST['descripcion']);
-        mysqli_query($con, "UPDATE tipo_actividad SET descripcion = '$descripcion' WHERE id = $id");
+        mysqli_query($con, "UPDATE TipoActividad SET descripcion = '$descripcion' WHERE id_tipo = $id");
         header("Location: index.php");
         exit;
     }
