@@ -9,7 +9,7 @@ $rs=$evento->getALL();
              
 <h3>   
 <?php 
-//echo "Bienvenidos ".$nombre."!!! ".$valor;
+
 ?>    
 </h3>
   <?php 
