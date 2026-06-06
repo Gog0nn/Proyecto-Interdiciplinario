@@ -75,7 +75,6 @@ CREATE TABLE Jugadores (
     alergias            VARCHAR(255)   NULL,
     enfermedades_base   VARCHAR(255)   NULL,
     PRIMARY KEY (id_jugador),
-    CONSTRAINT fk_jug_genero FOREIGN KEY (genero) REFERENCES Genero (id_genero)
 ) ENGINE=InnoDB;
 
 CREATE TABLE Tutores (
@@ -83,10 +82,27 @@ CREATE TABLE Tutores (
     apellido    VARCHAR(100)  NOT NULL,
     nombre      VARCHAR(100)  NOT NULL,
     contacto    VARCHAR(20)   NOT NULL,
-    id_jugador  INT UNSIGNED  NOT NULL,
     PRIMARY KEY (id_tutor),
-    CONSTRAINT fk_tut_jugador FOREIGN KEY (id_jugador) REFERENCES Jugadores (id_jugador) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- =======================================
+-- TABLA DE ASOCIACION DE JUGADOR Y TUTOR
+-- =======================================
+
+CREATE TABLE jugador_tutor (
+    id_jugador      INT UNSIGNED NOT NULL,
+    id_tutor        INT UNSIGNED NOT NULL,
+    tipo_relacion   VARCHAR(50),
+    fecha_registro  DATE DEFAULT (CURRENT_DATE),
+    PRIMARY KEY (id_jugador, id_tutor),
+    CONSTRAINT fk_jt_jugador FOREIGN KEY (id_jugador)
+        REFERENCES Jugadores (id_jugador)
+        ON DELEtE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_jt_tutor FOREIGN KEY (id_tutor)
+        REFERENCES Tutores (id_tutor)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 
 -- ============================================================
 --  ACTIVIDADES
@@ -183,10 +199,15 @@ INSERT INTO Jugadores (apellido, nombre, CI, fecha_nac, nro_contacto, genero, di
     ('Benítez', 'Fatima',  '5234567', '2000-09-22', '0984222333', 2, 'Calle 5 de Mayo 45', 'Encarnación', 'A+'),
     ('Torres',  'Diego',  '6345678', '2012-01-15', '0984333444', 1, 'San Roque 78', 'Posadas', 'B+');
 
-INSERT INTO Tutores (apellido, nombre, contacto, id_jugador) VALUES
-    ('López',   'Roberto', '0985111000', 1),
-    ('Benítez', 'María',   '0985222000', 2),
-    ('Torres',  'Jorge',   '0985333000', 4);
+INSERT INTO Tutores (apellido, nombre, contacto) VALUES
+    ('López',   'Roberto', '0985111000', ),
+    ('Benítez', 'María',   '0985222000', ),
+    ('Torres',  'Jorge',   '0985333000', );
+
+INSERT INTO jugador_tutor (id_jugador, id_tutor, tipo_relacion) VALUES
+    (1, 1, 'padre'),
+    (2, 2, 'madre'),
+    (3, 3, 'madre');
 
 INSERT INTO Actividad (nombre, descripcion, fecha, hora, lugar, id_genero, id_categoria, id_tipo) VALUES
     ('Práctica Técnica',  'Entrenamiento de técnica individual',    '2026-05-10', '08:00:00', 'Cancha A', 1, 1, 1),
