@@ -32,7 +32,7 @@ $generos = getAll();
         <a href="/backend/eventos/index.php" class="list-group-item list-group-item-action bg-transparent">
             <i class="bi bi-calendar-check me-2"></i>Todos los Eventos
         </a>
-        <a href="#" class="list-group-item list-group-item-action bg-transparent">
+        <a href="/backend/entrenadores/index.php" class="list-group-item list-group-item-action bg-transparent">
             <i class="bi bi-gear me-2"></i>Entrenadores
         </a>
     </div>
