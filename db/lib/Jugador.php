@@ -9,7 +9,7 @@ class Jugador {
     // Consulta corregida usando los campos exactos de tu base de datos
     public function getAll() {
         $sql = "SELECT j.*, g.descripcion AS genero_texto 
-                FROM jugadores j 
+                FROM Jugadores j 
                 LEFT JOIN Genero g ON j.genero = g.id_genero";
         return $this->db->query($sql);
     }
