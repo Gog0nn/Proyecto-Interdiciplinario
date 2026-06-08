@@ -27,7 +27,7 @@ function validarTutor($data) {
         $errores[] = "El nombre debe tener al menos 2 caracteres";
     } elseif (!longitudMaxima($nombre, 100)) {
         $errores[] = "El nombre no puede superar 100 caracteres";
-    } elseif (!soloTexto($nombre)) {
+    } elseif (!soloTexto($nombre)) { 
         $errores[] = "El nombre solo puede contener letras";
     }
 
