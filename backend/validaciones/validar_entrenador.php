@@ -8,7 +8,7 @@ function validarEntrenador($data) {
     $nombre       = $data['nombre'] ?? '';
     $fecha_nac    = $data['fecha_nac'] ?? '';
     $nro_contacto = $data['nro_contacto'] ?? '';
-    $ci           = $data['ci'] ?? '';
+    $ci = $data['CI'] ?? '';
 
     // APELLIDO
     if (!campoRequerido($apellido)) {
