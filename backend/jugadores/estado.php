@@ -1,16 +1,16 @@
 <?php
 require_once __DIR__ . "/../../db/lib/conex.php";
-require_once __DIR__ . "/../../db/lib/Jugador.php";
+require_once __DIR__ . "/../../db/lib/jugadores.php";
 
 if (isset($_GET['id']) && isset($_GET['accion'])) {
     $db = Conex();
-    $objetoJugador = new Jugador($db);
-    
-    $id = $_GET['id'];
-    $nuevoEstado = $_GET['accion']; 
+    $objetoJugador = new jugadores($db);
+
+    $id = (int)$_GET['id'];
+    $nuevoEstado = (int)$_GET['accion'];
 
     $rs = $objetoJugador->cambiarEstado($id, $nuevoEstado);
-    
+
     if ($rs) {
         header("Location: index.php?status=success");
         exit();
@@ -19,4 +19,3 @@ if (isset($_GET['id']) && isset($_GET['accion'])) {
 
 header("Location: index.php?status=error");
 exit();
-?>

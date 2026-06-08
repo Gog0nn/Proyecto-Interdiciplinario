@@ -1,0 +1,139 @@
+<?php
+include __DIR__ . "/../../db/lib/conex.php";
+include __DIR__ . "/../../db/lib/jugadores.php";
+$con     = Conex();
+$jugador = new jugadores($con);
+
+$id = (int)($_GET['id_jugador'] ?? 0);
+if (!$id) {
+    header('Location: index.php');
+    exit;
+}
+
+// Procesar formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $ok = $jugador->update([
+        'id_jugador'   => $id,
+        'apellido'     => $_POST['apellido']     ?? '',
+        'nombre'       => $_POST['nombre']       ?? '',
+        'CI'           => $_POST['CI']           ?? '',
+        'fecha_nac'    => $_POST['fecha_nac']    ?? '',
+        'nro_contacto' => $_POST['nro_contacto'] ?? '',
+        'genero'       => $_POST['genero']       ?? 0,
+        'activo'       => $_POST['activo']       ?? 1,
+        'direccion'    => $_POST['direccion']    ?? '',
+        'lugar_nac'    => $_POST['lugar_nac']    ?? '',
+        'tipo_sangre'  => $_POST['tipo_sangre']  ?? '',
+    ]);
+
+    header('Location: index.php?ok=' . ($ok ? 2 : 0));
+    exit;
+}
+
+// Cargar datos del jugador
+$rs   = $jugador->getByID($id);
+$fila = $rs ? $rs->fetch_assoc() : null;
+
+if (!$fila) {
+    header('Location: index.php');
+    exit;
+}
+?>
+
+<?php include_once '../../template/parciales/templateStart.php'; ?>
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a href="index.php" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+    <h3 class="mb-0">Editar jugador</h3>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+
+                <div class="col-6">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" name="apellido" class="form-control"
+                           value="<?= htmlspecialchars($fila['apellido']) ?>" required>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control"
+                           value="<?= htmlspecialchars($fila['nombre']) ?>" required>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">CI</label>
+                    <input type="text" name="CI" class="form-control"
+                           value="<?= htmlspecialchars($fila['CI']) ?>" required>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Fecha de nacimiento</label>
+                    <input type="date" name="fecha_nac" class="form-control"
+                           value="<?= $fila['fecha_nac'] ?>" required>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Nro. contacto</label>
+                    <input type="text" name="nro_contacto" class="form-control"
+                           value="<?= htmlspecialchars($fila['nro_contacto']) ?>">
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Género</label>
+                    <select name="genero" class="form-select" required>
+                        <option value="1" <?= $fila['genero'] == 1 ? 'selected' : '' ?>>Masculino</option>
+                        <option value="2" <?= $fila['genero'] == 2 ? 'selected' : '' ?>>Femenino</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Estado</label>
+                    <select name="activo" class="form-select" required>
+                        <option value="1" <?= ($fila['activo'] ?? 1) == 1 ? 'selected' : '' ?>>Activo</option>
+                        <option value="0" <?= ($fila['activo'] ?? 1) == 0 ? 'selected' : '' ?>>Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" name="direccion" class="form-control"
+                           value="<?= htmlspecialchars($fila['direccion']) ?>">
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Lugar de nacimiento</label>
+                    <input type="text" name="lugar_nac" class="form-control"
+                           value="<?= htmlspecialchars($fila['lugar_nac']) ?>">
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Tipo de sangre</label>
+                    <select name="tipo_sangre" class="form-select">
+                        <option value="">— Sin especificar —</option>
+                        <?php foreach (['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $ts): ?>
+                            <option value="<?= $ts ?>" <?= $fila['tipo_sangre'] === $ts ? 'selected' : '' ?>>
+                                <?= $ts ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-12 d-flex gap-2 mt-2">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-floppy"></i> Guardar cambios
+                    </button>
+                    <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php include_once '../../template/parciales/templateEnd.php'; ?>
