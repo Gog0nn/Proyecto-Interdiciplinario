@@ -68,6 +68,7 @@ CREATE TABLE Jugadores (
     fecha_nac           DATE           NOT NULL,
     nro_contacto        VARCHAR(20)    NOT NULL,
     genero              INT UNSIGNED   NOT NULL,
+    activo              TINYINT(1)     NOT NULL DEFAULT 1,
     direccion           VARCHAR(200)   NOT NULL,
     lugar_nac           VARCHAR(100)   NOT NULL,
     foto                LONGBLOB       NULL,

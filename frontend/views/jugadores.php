@@ -11,24 +11,33 @@ $generoActual = $id_genero ? getById($id_genero) : null;
  
 
 $categoriaActual = null;
+$edad_min = null;
+$edad_max = null;
 if ($id_categoria) {
     $stmt = $con->prepare("SELECT * FROM Categoria WHERE id_categoria = ?");
     $stmt->bind_param("i", $id_categoria);
     $stmt->execute();
     $categoriaActual = $stmt->get_result()->fetch_assoc();
     $stmt->close();
+
+    if ($categoriaActual) {
+        $edad_min = (int)$categoriaActual['edad_min'];
+        $edad_max = (int)$categoriaActual['edad_max'];
+    }
 }
  
 // Traer jugadores filtrados
 $jugadores = [];
 if ($id_genero && $id_categoria) {
     $stmt = $con->prepare("
-        SELECT id_jugador, apellido, nombre, CI, fecha_nac, nro_contacto
+        SELECT id_jugador, apellido, nombre, CI, fecha_nac, nro_contacto,
+               TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad
         FROM Jugadores
         WHERE genero = ?
+          AND TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) BETWEEN ? AND ?
         ORDER BY apellido, nombre
     ");
-    $stmt->bind_param("i", $id_genero);
+    $stmt->bind_param("iii", $id_genero, $edad_min, $edad_max);
     $stmt->execute();
     $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
@@ -37,7 +46,8 @@ if ($id_genero && $id_categoria) {
     $stmt->close();
 } elseif ($id_genero) {
     $stmt = $con->prepare("
-        SELECT id_jugador, apellido, nombre, CI, fecha_nac, nro_contacto
+        SELECT id_jugador, apellido, nombre, CI, fecha_nac, nro_contacto,
+               TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad
         FROM Jugadores
         WHERE genero = ?
         ORDER BY apellido, nombre
@@ -63,7 +73,7 @@ $con->close();
             <span class="badge bg-secondary"><?= htmlspecialchars($generoActual['descripcion']) ?></span>
         <?php endif; ?>
         <?php if ($categoriaActual): ?>
-            <span class="badge bg-dark"><?= htmlspecialchars($categoriaActual['descripcion']) ?></span>
+            <span class="badge bg-dark"><?= htmlspecialchars($categoriaActual['nombre']) ?></span>
         <?php endif; ?>
     </p>
     <?php endif; ?>
@@ -81,6 +91,7 @@ $con->close();
                     <th>Nombre</th>
                     <th>CI</th>
                     <th>Fecha Nac.</th>
+                    <th>Edad</th>
                     <th>Contacto</th>
                 </tr>
             </thead>
@@ -92,6 +103,7 @@ $con->close();
                     <td><?= htmlspecialchars($j['nombre']) ?></td>
                     <td><?= htmlspecialchars($j['CI']) ?></td>
                     <td><?= htmlspecialchars($j['fecha_nac']) ?></td>
+                    <td><?= htmlspecialchars($j['edad'] ?? '') ?></td>
                     <td><?= htmlspecialchars($j['nro_contacto']) ?></td>
                 </tr>
                 <?php endforeach; ?>
