@@ -4,11 +4,12 @@ require_once "helpers.php";
 function validarSeguimiento($data) {
     $errores = [];
 
-    $jugador_id = $data['jugador_id'] ?? '';
+    $jugador_id = $data['id_jugador'] ?? '';
     $fecha      = $data['fecha'] ?? '';
     $edad       = $data['edad'] ?? '';
     $peso       = $data['peso'] ?? '';
     $altura     = $data['altura'] ?? '';
+    $observacion = $data['observacion'] ?? '';
 
     // JUGADOR
     if (!campoRequerido($jugador_id)) {
@@ -58,6 +59,11 @@ function validarSeguimiento($data) {
         $errores[] = "La altura debe ser mayor a 0";
     } elseif ((float)$altura > 3) {
         $errores[] = "La altura debe expresarse en metros (ej: 1.75)";
+    }
+
+    // OBSERVACION (opcional, hasta 1000 caracteres)
+    if (!empty($observacion) && mb_strlen($observacion) > 1000) {
+        $errores[] = "La observación no puede superar los 1000 caracteres";
     }
 
     return $errores;

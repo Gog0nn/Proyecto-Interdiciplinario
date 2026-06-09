@@ -89,6 +89,7 @@ while ($fila = $rs->fetch_assoc()) {
                   <th>Lugar nac.</th>
                   <th>Tipo sangre</th>
                   <th class="text-center">Acciones</th>
+                  <th>Seguimiento del jugador</th>
                 </tr>
               </thead>
               <tbody>
@@ -133,6 +134,11 @@ while ($fila = $rs->fetch_assoc()) {
                            class="btn btn-success btn-sm py-1 px-2 fw-semibold" style="font-size: 0.75rem;">Alta</a>
                       <?php endif; ?>
                     </div>
+                  </td>
+                  <td>
+                    <a href="../seguimiento/index.php?id_jugador=<?= $fila['id_jugador'] ?>" class="btn btn-outline-info btn-sm py-1 px-2">
+                      <i class="bi bi-binoculars"></i> Ver Seguimiento
+                    </a>
                   </td>
                 </tr>
                 <?php endforeach; ?>
