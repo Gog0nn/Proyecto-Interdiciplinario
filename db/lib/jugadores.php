@@ -116,5 +116,31 @@ class jugadores {
             default: return 'sin-genero';
         }
     }
+
+    public function getFiltered($id_categoria, $id_genero) {
+        $where = [];
+        if ($id_genero) {
+            $where[] = "j.genero = $id_genero";
+        }
+        
+        $sql = "SELECT j.*, 
+                       c.nombre AS categoria_nombre,
+                       c.edad_min AS categoria_orden,
+                       TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) AS edad
+                FROM `Jugadores` j
+                LEFT JOIN `Categoria` c 
+                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) BETWEEN c.edad_min AND c.edad_max";
+        
+        if ($id_categoria) {
+            $where[] = "c.id_categoria = $id_categoria";
+        }
+
+        if ($where) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+        
+        $sql .= " ORDER BY c.edad_min ASC, j.genero ASC, j.apellido ASC";
+        return $this->db->query($sql);
+    }
 }
 ?>

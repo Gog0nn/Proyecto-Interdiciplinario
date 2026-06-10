@@ -27,18 +27,21 @@ $nombre = "Administrador de Tutores";
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
-                <tr>
-                    <th colspan="9" class="text-center">Lista de Tutores</th>
-                </tr>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre Y Apellido</th>
-                    <th>Contacto</th>
-                    <th>Jugador ID</th>
-                    <th colspan="3" class="text-center">
-                        <a href="guardar.php" class="btn btn-outline-success btn-sm">Nuevo Tutor</a>
-                    </th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th colspan="6" class="text-center">Lista de Tutores</th>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Y Apellido</th>
+                        <th>Contacto</th>
+                        <th>Jugador ID</th>
+                        <th colspan="2" class="text-center">
+                            <a href="nuevo.php" class="btn btn-outline-success btn-sm">Nuevo Tutor</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
                 <?php
                 while ($fila = $rs->fetch_assoc()) {
                 ?>

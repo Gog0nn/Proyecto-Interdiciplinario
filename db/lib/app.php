@@ -19,4 +19,14 @@ $parts = explode('/', trim($script_name, '/'));
 $base_url = $parts[0] ?? '';
 define('BASE_URL', '/' . $base_url);
 
+/**
+ * Retorna la clase 'active' si la sección proporcionada coincide con la URL actual.
+ * @param string $section Nombre de la carpeta o parte de la ruta (ej: 'jugadores')
+ * @return string
+ */
+function set_active(string $section): string {
+    $current_uri = $_SERVER['REQUEST_URI'];
+    return (str_contains($current_uri, $section)) ? 'active' : '';
+}
+
 ?>

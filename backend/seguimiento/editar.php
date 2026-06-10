@@ -18,7 +18,7 @@ if (isset($_GET['id']) && isset($_GET['id_jugador'])) {
     die("Parámetros inválidos");
 }
 $target = "actualizar.php";
-$titulo_form = "Editar Tutor";
+$titulo_form = "Editar Seguimiento";
 
 include_once __DIR__ . "/../../template/parciales/templateStart.php";
 include "_form.php";

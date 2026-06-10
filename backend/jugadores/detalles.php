@@ -1,0 +1,95 @@
+<?php
+require_once "../../db/lib/app.php";
+require_once "../../db/lib/conex.php";
+require_once "../../db/lib/jugadores.php";
+
+$db = Conex();
+$jugadorObj = new jugadores($db);
+
+// 1. Validar que exista el ID en la URL
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    header("Location: index.php");
+    exit;
+}
+
+$id_jugador = (int)$_GET['id'];
+$res = $jugadorObj->getByID($id_jugador);
+$jugador = $res->fetch_assoc();
+
+// 2. Si el jugador no existe, redirigir
+if (!$jugador) {
+    header("Location: index.php?error=notfound");
+    exit;
+}
+
+// Obtener categoría sugerida por edad
+$categoria_info = $jugadorObj->getCategoriaByEdad($jugador['fecha_nac']);
+
+include_once "../../template/parciales/templateStart.php";
+?>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Detalles del Jugador</h1>
+        <a href="index.php" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al listar
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 text-center mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <img src="../../assets/img/user-placeholder.png" class="img-fluid rounded-circle mb-3" style="width: 150px;" alt="Foto del jugador">
+                    <h3><?php echo $jugador['nombre'] . " " . $jugador['apellido']; ?></h3>
+                    <span class="badge <?php echo $jugador['activo'] ? 'bg-success' : 'bg-danger'; ?>">
+                        <?php echo $jugador['activo'] ? 'Activo' : 'Inactivo'; ?>
+                    </span>
+                    <p class="text-muted mt-2">Categoría: <?php echo $categoria_info['nombre']; ?></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Información Personal</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <label class="fw-bold">Cédula de Identidad:</label>
+                            <p><?php echo $jugador['CI']; ?></p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="fw-bold">Fecha de Nacimiento:</label>
+                            <p><?php echo $jugador['fecha_nac']; ?></p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="fw-bold">Género:</label>
+                            <p><?php echo $jugadorObj->getGeneroSlug($jugador['genero']); ?></p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="fw-bold">Tipo de Sangre:</label>
+                            <p><?php echo !empty($jugador['tipo_sangre']) ? $jugador['tipo_sangre'] : 'No especificado'; ?></p>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label class="fw-bold">Dirección:</label>
+                            <p><?php echo $jugador['direccion']; ?></p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="fw-bold">Lugar de Nacimiento:</label>
+                            <p><?php echo $jugador['lugar_nac']; ?></p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="fw-bold">Contacto:</label>
+                            <p><?php echo $jugador['nro_contacto']; ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include_once "../../template/parciales/templateEnd.php"; ?>
