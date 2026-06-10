@@ -15,6 +15,11 @@ $id_jugador = intval($_GET['id_jugador']);
 $res_jugador = $jugadorObj->getById($id_jugador); // Asumiendo que tenés este método en tu clase jugadores
 $datos_jugador = $res_jugador->fetch_assoc();
 
+// Cálculo automático de la edad actual del jugador
+$fecha_nac = new DateTime($datos_jugador['fecha_nac']);
+$hoy = new DateTime();
+$edad_actual = $hoy->diff($fecha_nac)->y;
+
 $target      = "guardar.php";
 $titulo_form = "Registrar Seguimiento Físico para: " . $datos_jugador['nombre'] . " " . $datos_jugador['apellido'];
 $errores     = [];
@@ -22,7 +27,7 @@ $fila = [
     "id_seguimiento" => "",
     "id_jugador"     => $id_jugador, // Este ya queda preestablecido para el formulario
     "fecha"          => date('Y-m-d'), // Sugiere la fecha de hoy por defecto
-    "edad"           => "",
+    "edad"           => $edad_actual,
     "peso"           => "",
     "altura"         => "",
     "observacion"   => "",

@@ -12,30 +12,41 @@ class Tutores{
 
     }
     public function getbyid($id){
-        $sql = "SELECT * FROM Tutores WHERE id_tutor = $id";
-        $rs = $this->db->query($sql);
-        return $rs;
+        $sql = "SELECT * FROM Tutores WHERE id_tutor = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result();
     }
     public function insert($datos){
-        $sql = "INSERT INTO Tutores (nombre, apellido, contacto, id_jugador) 
-        VALUES ('".$datos['nombre']."', '".$datos['apellido']."', '".$datos['contacto']."', '".$datos['jugador_id']."')";
-        $rs = $this->db->query($sql);
-        return $rs;
+        $sql = "INSERT INTO Tutores (nombre, apellido, contacto, id_jugador) VALUES (?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("sssi", 
+            $datos['nombre'], 
+            $datos['apellido'], 
+            $datos['contacto'], 
+            $datos['jugador_id']
+        );
+        return $stmt->execute();
     }
     public function update($datos){
-        $sql = "UPDATE `Tutores` SET 
-                `nombre` = '" . $datos['nombre'] . "', 
-                `apellido` = '" . $datos['apellido'] . "', 
-                `contacto` = '" . $datos['contacto'] . "', 
-                `id_jugador` = '" . $datos['jugador_id'] . "' 
-                WHERE `id_tutor` = " . $datos['id_tutor'];
-        $rs = $this->db->query($sql);
-        return $rs;
+        $sql = "UPDATE Tutores SET nombre = ?, apellido = ?, contacto = ?, id_jugador = ? WHERE id_tutor = ?";
+        $stmt = $this->db->prepare($sql);
+        $id_tutor = intval($datos['id_tutor'] ?? 0);
+        $stmt->bind_param("sssii", 
+            $datos['nombre'], 
+            $datos['apellido'], 
+            $datos['contacto'], 
+            $datos['jugador_id'], 
+            $id_tutor
+        );
+        return $stmt->execute();
     }
     public function delete($id){
-        $sql = "DELETE FROM Tutores WHERE id_tutor = $id";
-        $rs = $this->db->query($sql);
-        return $rs;
+        $sql = "DELETE FROM Tutores WHERE id_tutor = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
 

@@ -4,7 +4,9 @@ include __DIR__ . "/../../db/lib/jugadores.php";
 $con     = Conex();
 $jugador = new jugadores($con);
 
-$rs = $jugador->getALL();
+$id_categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
+$id_genero = isset($_GET['genero']) ? (int)$_GET['genero'] : 0;
+$rs = $jugador->getFiltered($id_categoria, $id_genero);
 $jugadores = [];
 while ($fila = $rs->fetch_assoc()) {
   $fila['genero_txt'] = match((int)$fila['genero']) {
@@ -59,6 +61,29 @@ while ($fila = $rs->fetch_assoc()) {
             No se pudo actualizar el estado del jugador.
           </div>
         <?php endif; ?>
+
+        <form method="get" class="mb-3 d-flex gap-2 align-items-center">
+            <select name="categoria" class="form-control w-auto">
+                <option value="">Todas las categorías</option>
+                <option value="1" <?= $id_categoria==1?'selected':'' ?>>Sub-10</option>
+                <option value="2" <?= $id_categoria==2?'selected':'' ?>>Sub-13</option>
+                <option value="3" <?= $id_categoria==3?'selected':'' ?>>Sub-15</option>
+                <option value="4" <?= $id_categoria==4?'selected':'' ?>>Sub-17</option>
+                <option value="5" <?= $id_categoria==5?'selected':'' ?>>Sub-20</option>
+            </select>
+            <select name="genero" class="form-control w-auto">
+                <option value="">Todos los géneros</option>
+                <option value="1" <?= $id_genero==1?'selected':'' ?>>Masculino</option>
+                <option value="2" <?= $id_genero==2?'selected':'' ?>>Femenino</option>
+                <option value="3" <?= $id_genero==3?'selected':'' ?>>Mixto</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
+                <i class="bi bi-filter me-1"></i> Filtrar
+            </button>
+            <a href="index.php" class="btn btn-outline-secondary btn-sm px-3 shadow-sm">
+                <i class="bi bi-trash3 me-1"></i> Limpiar
+            </a>
+        </form>
 
         <?php if (empty($jugadores)): ?>
           <div class="text-center py-5">
@@ -122,21 +147,23 @@ while ($fila = $rs->fetch_assoc()) {
                   <td class="text-center"><span class="badge bg-light text-dark border"><?= htmlspecialchars($fila['tipo_sangre']) ?></span></td>
                   <td>
                     <div class="d-flex flex-nowrap gap-1 justify-content-center">
+                      <a href="detalle.php?id_jugador=<?= $fila['id_jugador'] ?>"
+                        class="btn btn-outline-info py-1 px-2"><i class="bi bi-eye"></i></a>
                       <a href="editar.php?id_jugador=<?= $fila['id_jugador'] ?>"
-                         class="btn btn-outline-warning btn-sm py-1 px-2"><i class="bi bi-pencil-square"></i></a>
+                         class="btn btn-outline-warning py-1 px-2"><i class="bi bi-pencil-square"></i></a>
                       <a href="borrar.php?id_jugador=<?= $fila['id_jugador'] ?>"
-                         class="btn btn-outline-danger btn-sm py-1 px-2"><i class="bi bi-trash"></i></a>
+                         class="btn btn-outline-danger py-1 px-2"><i class="bi bi-trash"></i></a>
                       <?php if (($fila['activo'] ?? 1) == 1): ?>
                         <a href="estado.php?id=<?= $fila['id_jugador'] ?>&accion=0"
-                           class="btn btn-light border text-danger btn-sm py-1 px-2 fw-semibold" style="font-size: 0.75rem;">Baja</a>
+                           class="btn btn-light border text-danger py-1 px-2 fw-semibold">Baja</a>
                       <?php else: ?>
                         <a href="estado.php?id=<?= $fila['id_jugador'] ?>&accion=1"
-                           class="btn btn-success btn-sm py-1 px-2 fw-semibold" style="font-size: 0.75rem;">Alta</a>
+                           class="btn btn-success py-1 px-2 fw-semibold">Alta</a>
                       <?php endif; ?>
                     </div>
                   </td>
                   <td>
-                    <a href="../seguimiento/index.php?id_jugador=<?= $fila['id_jugador'] ?>" class="btn btn-outline-info btn-sm py-1 px-2">
+                    <a href="../seguimiento/index.php?id_jugador=<?= $fila['id_jugador'] ?>" class="btn btn-outline-info py-1 px-2">
                       <i class="bi bi-binoculars"></i> Ver Seguimiento
                     </a>
                   </td>

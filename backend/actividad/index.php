@@ -3,7 +3,9 @@ include "../../db/lib/conex.php"; // incluimos conexion
 include "../../db/lib/Actividad.php";
 $con = Conex(); // creamos la conexion a la db
 $evento= new Actividad($con);
-$rs=$evento->getALL();
+$id_categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
+$id_tipo = isset($_GET['tipo']) ? (int)$_GET['tipo'] : 0;
+$rs = $evento->getFiltered($id_categoria, $id_tipo);
 ?>
 <?php include_once '../../template/parciales/templateStart.php'; ?>
              
@@ -32,6 +34,29 @@ $rs=$evento->getALL();
       echo "<p style='color:red;'>Error al eliminar la actividad.</p>";
   }
   ?>
+
+<form method="get" class="mb-3 d-flex gap-2 align-items-center">
+    <select name="categoria" class="form-control w-auto">
+        <option value="">Todas las categorías</option>
+        <option value="1" <?= $id_categoria==1?'selected':'' ?>>Sub-10</option>
+        <option value="2" <?= $id_categoria==2?'selected':'' ?>>Sub-13</option>
+        <option value="3" <?= $id_categoria==3?'selected':'' ?>>Sub-15</option>
+        <option value="4" <?= $id_categoria==4?'selected':'' ?>>Sub-17</option>
+        <option value="5" <?= $id_categoria==5?'selected':'' ?>>Sub-20</option>
+    </select>
+     <select name="tipo" class="form-control w-auto">
+        <option value="">Todos los tipos</option>
+        <option value="1" <?= $id_tipo==1?'selected':'' ?>>Práctica</option>
+        <option value="2" <?= $id_tipo==2?'selected':'' ?>>Partido</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
+        <i class="bi bi-search me-1"></i> Filtrar
+    </button>
+    <a href="index.php" class="btn btn-outline-secondary btn-sm px-3 shadow-sm">
+        <i class="bi bi-arrow-counterclockwise me-1"></i> Limpiar
+    </a>
+</form>
+
 <table class="table table-striped ">
 <tr>
     <!--<th>id</th>-->

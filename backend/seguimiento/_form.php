@@ -23,15 +23,15 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="fecha" class="form-label">Fecha del Control</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha" 
-                        value="<?php echo isset($fila['fecha']) ? $fila['fecha'] : date('Y-m-d'); ?>" required>
+                    <input type="date" class="form-control-plaintext bg-light px-3 border rounded" id="fecha" name="fecha" 
+                        value="<?php echo isset($fila['fecha']) ? $fila['fecha'] : date('Y-m-d'); ?>" readonly>
                     <div class="invalid-feedback">Por favor, seleccione una fecha válida.</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="edad" class="form-label">Edad (años)</label>
-                    <input type="number" class="form-control" id="edad" name="edad" min="1" max="99"
-                           placeholder="Ej: 14" value="<?php echo isset($fila['edad']) ? $fila['edad'] : ''; ?>" required>
+                    <input type="number" class="form-control-plaintext bg-light px-3 border rounded" id="edad" name="edad" 
+                           value="<?php echo isset($fila['edad']) ? $fila['edad'] : ''; ?>" readonly>
                     <div class="invalid-feedback">Ingrese una edad válida (1 a 99 años).</div>
                 </div>
             </div>

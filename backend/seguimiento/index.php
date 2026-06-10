@@ -1,9 +1,11 @@
 <?php
 include '../../db/lib/conex.php';
 require_once '../../db/lib/seguimiento.php';
+require_once '../../db/lib/jugadores.php';
 
 $con = Conex();
 $seguimiento = new Seguimiento($con);
+$jugadorObj = new jugadores($con);
 
 // 1. Validamos que en la URL venga el ID del jugador (Ej: index.php?id_jugador=5)
 if (!isset($_GET['id_jugador']) || empty($_GET['id_jugador'])) {
@@ -13,6 +15,10 @@ if (!isset($_GET['id_jugador']) || empty($_GET['id_jugador'])) {
 }
 
 $id_jugador = intval($_GET['id_jugador']);
+
+// Obtenemos los datos del jugador para mostrar su nombre en el título
+$resJugador = $jugadorObj->getByID($id_jugador);
+$infoJugador = $resJugador->fetch_assoc();
 
 // 2. Ejecutamos la consulta específica usando la función que creamos en la clase
 $rs = $seguimiento->getByJugador($id_jugador);
@@ -28,7 +34,10 @@ $rs = $seguimiento->getByJugador($id_jugador);
 </head>
 <body>
     <div class="container mt-5" class ="table-responsive">
-        <h1 class="mb-4">Historial de Seguimiento</h1>
+        <h1 class="mb-4">
+            Historial de Seguimiento: 
+            <span class="text-primary"><?= htmlspecialchars(($infoJugador['nombre'] ?? '') . ' ' . ($infoJugador['apellido'] ?? '')) ?></span>
+        </h1>
         
         <a href="nuevo.php?id_jugador=<?php echo $id_jugador; ?>" class="btn btn-outline-success btn-sm">
             Crear Nuevo Seguimiento
@@ -76,12 +85,12 @@ $rs = $seguimiento->getByJugador($id_jugador);
                     
                     // Si el bucle terminó y nunca encontró un id_seguimiento real
                     if (!$tiene_registros) {
-                        echo '<tr><td colspan="6" class="text-center text-muted py-4">Este jugador no cuenta con registros físicos actualmente.</td></tr>';
+                        echo '<tr><td colspan="7" class="text-center text-muted py-4">Este jugador no cuenta con registros físicos actualmente.</td></tr>';
                     }
                 } else { 
                 ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
+                        <td colspan="7" class="text-center text-muted py-4">
                             El jugador no existe o hubo un error.
                         </td>
                     </tr>
