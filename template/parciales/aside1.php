@@ -35,6 +35,9 @@ $generos = getAll();
         <a href="/backend/entrenadores/index.php" class="list-group-item list-group-item-action bg-transparent">
             <i class="bi bi-gear me-2"></i>Entrenadores
         </a>
+        <a href="/backend/actividad/index.php" class="list-group-item list-group-item-action bg-transparent">
+            <i class="bi bi-people me-2"></i>Actividades
+        </a>
     </div>
 
     <div class="mb-2 ps-2 fw-bold text-muted small">Acciones</div>
@@ -85,10 +88,6 @@ $generos = getAll();
                 <?php endforeach; ?>
             </div>
         </div>
-
-        <a href="/backend/actividad/index.php" class="list-group-item list-group-item-action bg-transparent">
-            <i class="bi bi-people me-2"></i>Actividades
-        </a>
 
         <a href="/backend/jugadores/index.php" class="list-group-item list-group-item-action bg-transparent">
             <i class="bi bi-people me-2"></i>Jugadores
