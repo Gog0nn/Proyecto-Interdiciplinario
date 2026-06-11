@@ -5,7 +5,8 @@ $con = Conex(); // creamos la conexion a la db
 $evento= new Actividad($con);
 $id_categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
 $id_tipo = isset($_GET['tipo']) ? (int)$_GET['tipo'] : 0;
-$rs = $evento->getFiltered($id_categoria, $id_tipo);
+
+$rs = $evento->getFiltered($id_categoria, $id_tipo);//Traemos el resultado de la consulta a la db
 ?>
 <?php include_once '../../template/parciales/templateStart.php'; ?>
              
@@ -34,8 +35,9 @@ $rs = $evento->getFiltered($id_categoria, $id_tipo);
       echo "<p style='color:red;'>Error al eliminar la actividad.</p>";
   }
   ?>
-
+<h2>Actividades</h2>
 <form method="get" class="mb-3 d-flex gap-2 align-items-center">
+    <h2>Filtrar por:</h2>
     <select name="categoria" class="form-control w-auto">
         <option value="">Todas las categorías</option>
         <option value="1" <?= $id_categoria==1?'selected':'' ?>>Sub-10</option>

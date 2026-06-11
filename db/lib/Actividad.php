@@ -35,11 +35,7 @@ class Actividad {
          $sql="DELETE FROM `Actividad` WHERE `Actividad`.`id_actividad` = ".$dato;
          $rs=$this->db->query($sql);
      }
-    public function getByCategoria($id_categoria) {
-    $id = (int)$id_categoria;
-    $sql = "SELECT * FROM Actividad WHERE id_categoria = $id";
-    return $this->db->query($sql);
-     }
+
     public function getFiltered($id_categoria, $id_tipo) {
     $where = [];
     if ($id_categoria) $where[] = "id_categoria = $id_categoria";

@@ -4,7 +4,7 @@ require_once __DIR__ . "/../../backend/genero/genero.php";
 
 $con = Conex();
 $categorias = [];
-$result = $con->query("SELECT * FROM Categoria ORDER BY edad_min ASC, edad_max ASC, id_categoria ASC");
+$result = $con->query("SELECT * FROM Categoria ORDER BY edad ASC, id_categoria ASC");
 while ($row = $result->fetch_assoc()) {
     $categorias[] = $row;
 }
@@ -85,6 +85,11 @@ $generos = getAll();
                 <?php endforeach; ?>
             </div>
         </div>
+
+        <a href="/backend/actividad/index.php" class="list-group-item list-group-item-action bg-transparent">
+            <i class="bi bi-people me-2"></i>Actividades
+        </a>
+
         <a href="/backend/jugadores/index.php" class="list-group-item list-group-item-action bg-transparent">
             <i class="bi bi-people me-2"></i>Jugadores
         </a>
