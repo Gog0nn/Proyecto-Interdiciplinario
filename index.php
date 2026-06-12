@@ -93,7 +93,6 @@ include __DIR__ . "/db/lib/conex.php";
                 <div class="icon-box mx-auto mb-4" style="width: 80px; height: 80px;">
                     <i class="bi bi-shield-lock fs-1"></i>
                 </div>
-                <h2 class="fw-bold mb-3">Panel de Administración</h2>
                 <h2 class="fw-bold mb-3 text-dark">Panel de Administración</h2>
                 <p class="text-muted mb-4">Acceda a la gestión integral de jugadores, categorías y seguimiento físico del club.</p>
                 

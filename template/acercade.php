@@ -5,14 +5,14 @@
             <h1 class="display-4 fw-bold mb-4">Sobre Nosotros</h1>
             <p class="lead">El Club Sacachispas de Encarnación, Paraguay, mantiene una activa actividad en el básquetbol, enfocándose tanto en la competencia como en la inclusión deportiva.</p>
             
-            <div class="display-4 fw-bold mb-4">
+            <div class="mb-4">
                 <h5 class="fw-bold text-primary"><i class="bi bi-trophy me-2"></i>Actividades Recientes</h5>
-                <p class="lead">Torneo Interno: En enero de 2023, el club organizó un torneo interno con exjugadores de todas las edades, disputado en su sede ubicada en la calle Juan León Mallorquín.</p>
+                <p>Torneo Interno: En enero de 2023, el club organizó un torneo interno con exjugadores de todas las edades, disputado en su sede ubicada en la calle Juan León Mallorquín.</p>
             </div>
 
-            <div class="display-4 fw-bold mb-4">
+            <div class="mb-4">
                 <h5 class="fw-bold text-success"><i class="bi bi-heart me-2"></i>Básquet Inclusivo</h5>
-                <p class="lead">El "Team Angiru" reúne a más de 30 participantes con diversas capacidades. Prácticas: Martes y jueves de 16:00 a 17:15 horas.</p>
+                <p>El "Team Angiru" reúne a más de 30 participantes con diversas capacidades. Prácticas: Martes y jueves de 16:00 a 17:15 horas.</p>
             </div>
         </div>
 
