@@ -7,7 +7,6 @@ function validarTutor($data) {
     $apellido   = $data['apellido'] ?? '';
     $nombre     = $data['nombre'] ?? '';
     $contacto   = $data['contacto'] ?? '';
-    $jugador_id = $data['jugador_id'] ?? '';
 
     // APELLIDO
     if (!campoRequerido($apellido)) {
@@ -27,7 +26,7 @@ function validarTutor($data) {
         $errores[] = "El nombre debe tener al menos 2 caracteres";
     } elseif (!longitudMaxima($nombre, 100)) {
         $errores[] = "El nombre no puede superar 100 caracteres";
-    } elseif (!soloTexto($nombre)) { 
+    } elseif (!soloTexto($nombre)) {
         $errores[] = "El nombre solo puede contener letras";
     }
 
@@ -36,13 +35,6 @@ function validarTutor($data) {
         $errores[] = "El contacto es obligatorio";
     } elseif (!longitudMaxima($contacto, 50)) {
         $errores[] = "El contacto no puede superar 50 caracteres";
-    }
-
-    // JUGADOR
-    if (!campoRequerido($jugador_id)) {
-        $errores[] = "Debe asociar el tutor a un jugador";
-    } elseif (!esEnteroPositivo($jugador_id)) {
-        $errores[] = "El jugador seleccionado no es válido";
     }
 
     return $errores;

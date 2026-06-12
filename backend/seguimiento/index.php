@@ -50,7 +50,6 @@ $rs = $seguimiento->getByJugador($id_jugador);
                     <th>Edad</th>
                     <th>Peso (kg)</th>
                     <th>Altura (m)</th>
-                    <th>Observación</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -73,7 +72,6 @@ $rs = $seguimiento->getByJugador($id_jugador);
                         <td><?php echo $fila['edad']; ?></td>
                         <td><?php echo $fila['peso']; ?></td>
                         <td><?php echo $fila['altura']; ?></td>
-                        <td><?php echo $fila['observacion']; ?></td>
 
                         <td>
                             <a href="editar.php?id=<?php echo $fila['id_seguimiento']; ?>&id_jugador=<?php echo $id_jugador; ?>" class="btn btn-sm btn-warning">Editar</a>
@@ -85,12 +83,12 @@ $rs = $seguimiento->getByJugador($id_jugador);
                     
                     // Si el bucle terminó y nunca encontró un id_seguimiento real
                     if (!$tiene_registros) {
-                        echo '<tr><td colspan="7" class="text-center text-muted py-4">Este jugador no cuenta con registros físicos actualmente.</td></tr>';
+                        echo '<tr><td colspan="6" class="text-center text-muted py-4">Este jugador no cuenta con registros físicos actualmente.</td></tr>';
                     }
-                } else { 
+                } else {
                 ?>
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="6" class="text-center text-muted py-4">
                             El jugador no existe o hubo un error.
                         </td>
                     </tr>

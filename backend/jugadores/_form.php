@@ -42,6 +42,7 @@
           'lugar_nac'       => '',
           'tipo_sangre'     => '',
           'enfermedad_base' => '',
+          'tutores'         => [],
       ];
   }
   ?>
@@ -78,8 +79,6 @@
       <option value="3" <?php echo ($fila['genero'] == 3) ? 'selected' : ''; ?>>Mixto</option>
     </select><br><br>
 
-    
-
     <label for="direccion">Dirección:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['direccion']); ?>"
            id="direccion" name="direccion" maxlength="191" class="form-control"><br><br>
@@ -98,12 +97,27 @@
       <?php } ?>
     </select><br><br>
 
+    <label for="tutores">Tutores Asignados <span style="color: red;">*</span></label><br>
+    <select id="tutores" name="tutores[]" multiple required class="form-control">
+      <?php
+      if (isset($tutores_rs) && $tutores_rs) {
+          $tutores_seleccionados = isset($fila['tutores']) && is_array($fila['tutores']) ? $fila['tutores'] : [];
+          while ($tutor = $tutores_rs->fetch_assoc()) {
+              $selected = in_array($tutor['id_tutor'], $tutores_seleccionados) ? 'selected' : '';
+              echo "<option value='{$tutor['id_tutor']}' $selected>";
+              echo htmlspecialchars($tutor['apellido'] . ", " . $tutor['nombre']);
+              echo "</option>";
+          }
+      }
+      ?>
+    </select>
+    <small style="display: block; color: #666; margin-top: 5px;">Selecciona al menos un tutor. Usa Ctrl+Click para múltiples.</small><br><br>
+
     <label for="foto">Foto del Jugador:</label><br>
     <?php if (!empty($fila['foto'])): ?>
         <div class="mb-2 text-muted small">Ya existe una foto guardada. Selecciona una nueva para cambiarla.</div>
     <?php endif; ?>
     <input type="file" id="foto" name="foto" accept="image/*" class="form-control"><br><br>
-    
 
     <a href="index.php" class="btn btn-outline-secondary">Volver al listado</a>
     <input type="submit" value="Guardar" class="btn btn-outline-success">

@@ -6,25 +6,23 @@ class Seguimiento {
         $this->db = $db;
     }
     public function getByJugador($id_jugador) {
-    // Esta consulta trae al jugador SIEMPRE, y si tiene seguimientos, los incluye
-    $sql = "SELECT 
-                j.id_jugador,
-                s.id_seguimiento,
-                s.fecha AS fecha_seguimiento,
-                s.edad,
-                s.peso,
-                s.altura,
-                s.observacion
-            FROM Jugadores j
-            LEFT JOIN Seguimiento s ON j.id_jugador = s.id_jugador
-            WHERE j.id_jugador = ?
-            ORDER BY s.fecha DESC";
-            
-    $stmt = $this->db->prepare($sql);
-    $stmt->bind_param("i", $id_jugador);
-    $stmt->execute();
-    return $stmt->get_result();
-}
+        $sql = "SELECT
+                    j.id_jugador,
+                    s.id_seguimiento,
+                    s.fecha AS fecha_seguimiento,
+                    s.edad,
+                    s.peso,
+                    s.altura
+                FROM Jugadores j
+                LEFT JOIN Seguimiento s ON j.id_jugador = s.id_jugador
+                WHERE j.id_jugador = ?
+                ORDER BY s.fecha DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $id_jugador);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
     public function getall(){
         $sql = "SELECT * FROM Seguimiento";
         $rs = $this->db->query($sql);
@@ -45,10 +43,8 @@ class Seguimiento {
         $peso = (float)($datos['peso'] ?? 0);
         $altura = (float)($datos['altura'] ?? 0);
 
-        $observacion = $this->db->real_escape_string($datos['observacion'] ?? '');
-
-        $sql = "INSERT INTO `Seguimiento` (`id_jugador`, `fecha`, `edad`, `peso`, `altura`, `observacion`) 
-            VALUES ($id_jugador, '$fecha', $edad, $peso, $altura, '$observacion')";
+        $sql = "INSERT INTO `Seguimiento` (`id_jugador`, `fecha`, `edad`, `peso`, `altura`)
+            VALUES ($id_jugador, '$fecha', $edad, $peso, $altura)";
 
         $rs = $this->db->query($sql);
         return $rs;
@@ -62,15 +58,12 @@ class Seguimiento {
         $peso = (float)($datos['peso'] ?? 0);
         $altura = (float)($datos['altura'] ?? 0);
 
-        $observacion = $this->db->real_escape_string($datos['observacion'] ?? '');
-
-        $sql = "UPDATE `Seguimiento` SET 
-            `id_jugador` = $id_jugador, 
-            `fecha` = '$fecha', 
-            `edad` = $edad, 
-            `peso` = $peso, 
-            `altura` = $altura, 
-            `observacion` = '$observacion' 
+        $sql = "UPDATE `Seguimiento` SET
+            `id_jugador` = $id_jugador,
+            `fecha` = '$fecha',
+            `edad` = $edad,
+            `peso` = $peso,
+            `altura` = $altura
             WHERE `id_seguimiento` = $id_seguimiento";
 
         $rs = $this->db->query($sql);

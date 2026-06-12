@@ -8,14 +8,14 @@ class jugadores {
     }
 
     public function getALL() {
-        $sql = "SELECT j.*, 
-                       c.nombre AS categoria_nombre,
-                       c.edad_min AS categoria_orden,
+        $sql = "SELECT j.*,
+                       c.descripcion AS categoria_nombre,
+                       c.edad AS categoria_orden,
                        TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) AS edad
                 FROM `Jugadores` j
-                LEFT JOIN `Categoria` c 
-                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) BETWEEN c.edad_min AND c.edad_max
-                ORDER BY c.edad_min ASC, j.genero ASC, j.apellido ASC";
+                LEFT JOIN `Categoria` c
+                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) <= c.edad
+                ORDER BY c.edad ASC, j.genero ASC, j.apellido ASC";
         return $this->db->query($sql);
     }
 
@@ -50,27 +50,26 @@ class jugadores {
     }
 
     public function update($datos) {
-        $sql = "UPDATE `Jugadores` SET 
-                `apellido` = ?, `nombre` = ?, `CI` = ?, `fecha_nac` = ?, 
-                `nro_contacto` = ?, `genero` = ?, `activo` = ?, `direccion` = ?, 
-                `lugar_nac` = ?, `foto` = ?, `tipo_sangre` = ?, `alergias` = ?, 
-                `enfermedades_base` = ? 
+        $sql = "UPDATE `Jugadores` SET
+                `apellido` = ?, `nombre` = ?, `CI` = ?, `fecha_nac` = ?,
+                `nro_contacto` = ?, `genero` = ?, `direccion` = ?,
+                `lugar_nac` = ?, `foto` = ?, `tipo_sangre` = ?, `alergias` = ?,
+                `enfermedades_base` = ?
                 WHERE `id_jugador` = ?";
-        
+
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("sssssiissssssi", 
-            $datos['apellido'], 
-            $datos['nombre'], 
-            $datos['CI'], 
-            $datos['fecha_nac'], 
-            $datos['nro_contacto'], 
-            $datos['genero'], 
-            $datos['activo'], 
-            $datos['direccion'], 
-            $datos['lugar_nac'], 
-            $datos['foto'], 
-            $datos['tipo_sangre'], 
-            $datos['alergias'], 
+        $stmt->bind_param("sssssissssssi",
+            $datos['apellido'],
+            $datos['nombre'],
+            $datos['CI'],
+            $datos['fecha_nac'],
+            $datos['nro_contacto'],
+            $datos['genero'],
+            $datos['direccion'],
+            $datos['lugar_nac'],
+            $datos['foto'],
+            $datos['tipo_sangre'],
+            $datos['alergias'],
             $datos['enfermedades_base'],
             $datos['id_jugador']
         );
@@ -100,8 +99,9 @@ class jugadores {
         $hoy = new DateTime();
         $edad = (int)$hoy->diff($fecha)->y;
 
-        $sql = "SELECT id_categoria, nombre FROM `Categoria` 
-            WHERE $edad BETWEEN edad_min AND edad_max 
+        $sql = "SELECT id_categoria, descripcion FROM `Categoria`
+            WHERE $edad <= edad
+            ORDER BY edad ASC
             LIMIT 1";
 
         $rs  = $this->db->query($sql);
@@ -109,7 +109,7 @@ class jugadores {
 
         if (!$row) return ['id' => 0, 'nombre' => 'Sin categoría'];
 
-        return ['id' => (int)$row['id_categoria'], 'nombre' => $row['nombre']];
+        return ['id' => (int)$row['id_categoria'], 'nombre' => $row['descripcion']];
     }
 
     public function getGeneroSlug($genero) {
@@ -126,15 +126,15 @@ class jugadores {
         if ($id_genero) {
             $where[] = "j.genero = $id_genero";
         }
-        
-        $sql = "SELECT j.*, 
-                    c.nombre AS categoria_nombre,
-                    c.edad_min AS categoria_orden,
+
+        $sql = "SELECT j.*,
+                    c.descripcion AS categoria_nombre,
+                    c.edad AS categoria_orden,
                     TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) AS edad
                     FROM `Jugadores` j
-                    LEFT JOIN `Categoria` c 
-                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) BETWEEN c.edad_min AND c.edad_max";
-        
+                    LEFT JOIN `Categoria` c
+                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) <= c.edad";
+
         if ($id_categoria) {
             $where[] = "c.id_categoria = $id_categoria";
         }
@@ -142,8 +142,8 @@ class jugadores {
         if ($where) {
             $sql .= " WHERE " . implode(" AND ", $where);
         }
-        
-        $sql .= " ORDER BY c.edad_min ASC, j.genero ASC, j.apellido ASC";
+
+        $sql .= " ORDER BY c.edad ASC, j.genero ASC, j.apellido ASC";
         return $this->db->query($sql);
     }
 }

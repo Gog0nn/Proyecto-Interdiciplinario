@@ -2,9 +2,11 @@
 
 require_once __DIR__ . "/../../db/lib/conex.php";
 require_once __DIR__ . "/../../db/lib/tutores.php";
+require_once __DIR__ . "/../../db/lib/jugadores.php";
 
 $db = Conex();
 $tutores = new Tutores($db);
+$jugadores = new jugadores($db);
 $rs = $tutores->getAll();
 
 $nombre = "Administrador de Tutores";
@@ -33,9 +35,9 @@ $nombre = "Administrador de Tutores";
                     </tr>
                     <tr>
                         <th>ID</th>
-                        <th>Nombre Y Apellido</th>
+                        <th>Nombre y Apellido</th>
                         <th>Contacto</th>
-                        <th>Jugador ID</th>
+                        <th>Jugadores Asignados</th>
                         <th colspan="2" class="text-center">
                             <a href="nuevo.php" class="btn btn-outline-success btn-sm">Nuevo Tutor</a>
                         </th>
@@ -44,12 +46,33 @@ $nombre = "Administrador de Tutores";
                 <tbody>
                 <?php
                 while ($fila = $rs->fetch_assoc()) {
+                    $jugador_ids = $fila['jugador_ids'] ? explode(',', $fila['jugador_ids']) : [];
+                    $jugadores_nombres = [];
+
+                    if (!empty($jugador_ids)) {
+                        foreach ($jugador_ids as $jid) {
+                            $jrs = $jugadores->getByID((int)$jid);
+                            if ($jrs && $jfila = $jrs->fetch_assoc()) {
+                                $jugadores_nombres[] = $jfila['apellido'] . ", " . $jfila['nombre'];
+                            }
+                        }
+                    }
                 ?>
                 <tr>
                     <td><?php echo $fila['id_tutor']; ?></td>
                     <td><?php echo $fila['apellido'] . ", " . $fila['nombre']; ?></td>
                     <td>+595 <?php echo $fila['contacto']; ?></td>
-                    <td><?php echo $fila['id_jugador']; ?></td>
+                    <td>
+                        <?php if (!empty($jugadores_nombres)): ?>
+                            <ul class="mb-0">
+                                <?php foreach ($jugadores_nombres as $nombre): ?>
+                                    <li><?php echo htmlspecialchars($nombre); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <span class="text-muted">Sin jugadores</span>
+                        <?php endif; ?>
+                    </td>
                     <td><a href="editar.php?id_tutor=<?php echo $fila['id_tutor']; ?>" class="btn btn-outline-warning btn-sm">Editar</a></td>
                     <td><a href="borrar.php?id_tutor=<?php echo $fila['id_tutor']; ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Seguro que quieres borrar este tutor?');">Borrar</a></td>
                 </tr>

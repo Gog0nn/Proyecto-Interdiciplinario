@@ -58,14 +58,6 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label for="observaciones" class="form-label">Observaciones</label>
-                    <textarea class="form-control" id="observacion" name="observacion" rows="4" maxlength="1000" placeholder="Agregar observación (máx 1000 caracteres)"><?php echo isset($fila['observacion']) ? htmlspecialchars($fila['observacion']) : ''; ?></textarea>
-                    <div class="form-text">Máximo 1000 caracteres.</div>
-                </div>
-            </div>
-
         </div>
         <div class="card-footer text-end">
             <a href="index.php?id_jugador=<?php echo isset($fila['id_jugador']) ? $fila['id_jugador'] : ''; ?>" class="btn btn-secondary">

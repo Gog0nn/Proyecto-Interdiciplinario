@@ -1,8 +1,11 @@
 <?php
 include __DIR__ . "/../../db/lib/conex.php";
 include __DIR__ . "/../../db/lib/jugadores.php";
+include __DIR__ . "/../../db/lib/tutores.php";
+
 $con     = Conex();
 $jugador = new jugadores($con);
+$tutores = new Tutores($con);
 
 $id = (int)($_GET['id_jugador'] ?? 0);
 if (!$id) {
@@ -26,16 +29,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'fecha_nac'    => $_POST['fecha_nac']    ?? '',
         'nro_contacto' => $_POST['nro_contacto'] ?? '',
         'genero'       => $_POST['genero']       ?? 0,
-        'activo'       => $_POST['activo']       ?? 1,
         'direccion'    => $_POST['direccion']    ?? '',
         'lugar_nac'    => $_POST['lugar_nac']    ?? '',
         'tipo_sangre'  => $_POST['tipo_sangre']  ?? '',
-        'alergias'     => $_POST['alergias']     ?? '', // Asegúrate de que estos campos existan en el formulario si los necesitas
+        'alergias'     => $_POST['alergias']     ?? '',
         'enfermedades_base' => $_POST['enfermedades_base'] ?? '',
         'foto'         => $foto
     ];
 
     $ok = $jugador->update($datos);
+
+    // Procesar tutores asignados
+    if ($ok && isset($_POST['tutores'])) {
+        // Eliminar tutores previos
+        $con->query("DELETE FROM jugador_tutor WHERE id_jugador = $id");
+
+        // Asignar nuevos tutores
+        foreach ($_POST['tutores'] as $tutor_id) {
+            $tutor_id = (int)$tutor_id;
+            $con->query("INSERT IGNORE INTO jugador_tutor (id_jugador, id_tutor) VALUES ($id, $tutor_id)");
+        }
+    }
 
     header('Location: index.php?ok=' . ($ok ? 2 : 0));
     exit;
@@ -48,6 +62,18 @@ $fila = $rs ? $rs->fetch_assoc() : null;
 if (!$fila) {
     header('Location: index.php');
     exit;
+}
+
+// Obtener tutores disponibles
+$tutores_disponibles = $tutores->getall();
+
+// Obtener tutores asignados al jugador actual
+$tutores_asignados = [];
+$result = $con->query("SELECT id_tutor FROM jugador_tutor WHERE id_jugador = $id");
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $tutores_asignados[] = $row['id_tutor'];
+    }
 }
 ?>
 
@@ -103,14 +129,6 @@ if (!$fila) {
                     </select>
                 </div>
 
-                <div class="col-6">
-                    <label class="form-label">Estado</label>
-                    <select name="activo" class="form-select" required>
-                        <option value="1" <?= ($fila['activo'] ?? 1) == 1 ? 'selected' : '' ?>>Activo</option>
-                        <option value="0" <?= ($fila['activo'] ?? 1) == 0 ? 'selected' : '' ?>>Inactivo</option>
-                    </select>
-                </div>
-
                 <div class="col-12">
                     <label class="form-label">Dirección</label>
                     <input type="text" name="direccion" class="form-control"
@@ -150,6 +168,23 @@ if (!$fila) {
                 <div class="col-12">
                     <label class="form-label">Foto del Jugador</label>
                     <input type="file" name="foto" class="form-control" accept="image/*">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Tutores Asignados <span class="text-danger">*</span></label>
+                    <select name="tutores[]" class="form-select" multiple required>
+                        <?php
+                        if ($tutores_disponibles) {
+                            while ($tutor = $tutores_disponibles->fetch_assoc()) {
+                                $selected = in_array($tutor['id_tutor'], $tutores_asignados) ? 'selected' : '';
+                                echo "<option value='{$tutor['id_tutor']}' $selected>";
+                                echo htmlspecialchars($tutor['apellido'] . ", " . $tutor['nombre']);
+                                echo "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                    <small class="form-text text-muted">Selecciona al menos un tutor. Usa Ctrl+Click para múltiples.</small>
                 </div>
 
                 <div class="col-12 d-flex gap-2 mt-2">

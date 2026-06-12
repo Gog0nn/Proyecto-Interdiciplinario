@@ -15,6 +15,12 @@
     echo "<span style='color: red;'>Error al actualizar los datos. Por favor, revise los datos ingresados.</span><br><br>";
 } ?>
 
+<?php
+require_once __DIR__ . "/../../db/lib/jugadores.php";
+$jugadoresObj = new jugadores($db);
+$jugadoresRs = $jugadoresObj->getALL();
+?>
+
 <form action="<?php echo $target; ?>" method="post" class="needs-validation" novalidate>
     <input type="hidden" name="id_tutor" value="<?php echo $fila['id_tutor'] ?? ''; ?>">
     <div class="mb-3">
@@ -33,9 +39,22 @@
             class="form-control" value="<?php echo $fila['contacto'] ?? ''; ?>" required>
     </div>
     <div class="mb-3">
-        <label for="jugador_id" class="form-label">ID del Jugador</label>
-        <input type="number" id="jugador_id" name="jugador_id" min="1"
-            class="form-control" value="<?php echo $fila['jugador_id'] ?? ''; ?>" required>
+        <label for="jugador_ids" class="form-label">Asignar Jugador(es) <span class="text-danger">*</span></label>
+        <select id="jugador_ids" name="jugador_ids[]" class="form-select" multiple required>
+            <?php
+            if ($jugadoresRs) {
+                $jugador_ids = isset($fila['jugador_ids']) && $fila['jugador_ids'] ?
+                    explode(',', $fila['jugador_ids']) : [];
+                while ($jugador = $jugadoresRs->fetch_assoc()) {
+                    $selected = in_array($jugador['id_jugador'], $jugador_ids) ? 'selected' : '';
+                    echo "<option value='{$jugador['id_jugador']}' $selected>";
+                    echo htmlspecialchars($jugador['apellido'] . ", " . $jugador['nombre']);
+                    echo "</option>";
+                }
+            }
+            ?>
+        </select>
+        <small class="form-text text-muted">Selecciona al menos un jugador. Usa Ctrl+Click para múltiples.</small>
     </div>
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Guardar Tutor</button>

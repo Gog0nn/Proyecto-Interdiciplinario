@@ -25,12 +25,11 @@ $titulo_form = "Registrar Seguimiento Físico para: " . $datos_jugador['nombre']
 $errores     = [];
 $fila = [
     "id_seguimiento" => "",
-    "id_jugador"     => $id_jugador, // Este ya queda preestablecido para el formulario
-    "fecha"          => date('Y-m-d'), // Sugiere la fecha de hoy por defecto
+    "id_jugador"     => $id_jugador,
+    "fecha"          => date('Y-m-d'),
     "edad"           => $edad_actual,
     "peso"           => "",
     "altura"         => "",
-    "observacion"   => "",
 ];
 
 include_once '../../template/parciales/templateStart.php';
