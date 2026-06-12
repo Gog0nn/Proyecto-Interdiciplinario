@@ -46,7 +46,7 @@
   }
   ?>
 
-  <form action="<?php echo $target; ?>" method="post">
+  <form action="<?php echo $target; ?>" method="post" enctype="multipart/form-data">
 
     <input type="hidden" name="id_jugador" value="<?php echo $fila['id_jugador']; ?>">
 
@@ -98,6 +98,11 @@
       <?php } ?>
     </select><br><br>
 
+    <label for="foto">Foto del Jugador:</label><br>
+    <?php if (!empty($fila['foto'])): ?>
+        <div class="mb-2 text-muted small">Ya existe una foto guardada. Selecciona una nueva para cambiarla.</div>
+    <?php endif; ?>
+    <input type="file" id="foto" name="foto" accept="image/*" class="form-control"><br><br>
     
 
     <a href="index.php" class="btn btn-outline-secondary">Volver al listado</a>

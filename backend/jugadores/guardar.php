@@ -11,7 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errores = validarJugador($_POST);
 
     if (empty($errores)) {
-        $jugador->insert($_POST);
+        $foto = null;
+        // Verificamos si se subió una foto correctamente
+        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+            $foto = file_get_contents($_FILES['foto']['tmp_name']);
+        }
+
+        $datos = array_merge($_POST, ['foto' => $foto, 'activo' => 1]);
+        $jugador->insert($datos);
 
         $genero_id = (int)$_POST['genero'];
         $categoria = $jugador->getCategoriaByEdad($_POST['fecha_nac']);
