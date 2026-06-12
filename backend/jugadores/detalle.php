@@ -56,7 +56,15 @@ include_once '../../template/parciales/templateStart.php';
         <div class="col-md-4 text-center mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <img src="../../assets/img/user-placeholder.png" class="img-fluid rounded-circle mb-3 border" style="width: 120px;" alt="Foto">
+                    <?php 
+                    $foto_src = "../../assets/img/user-placeholder.png";
+                    if (!empty($jugador['foto'])) {
+                        // Convertimos el binario (BLOB) a base64 para que el navegador lo interprete
+                        $foto_base64 = base64_encode($jugador['foto']);
+                        $foto_src = "data:image/jpeg;base64," . $foto_base64;
+                    }
+                    ?>
+                    <img src="<?= $foto_src ?>" class="img-fluid rounded-circle mb-3 border" style="width: 120px; height: 120px; object-fit: cover;" alt="Foto">
                     <h4 class="fw-bold"><?= htmlspecialchars($jugador['nombre'] . " " . $jugador['apellido']) ?></h4>
                     <span class="badge <?= $jugador['activo'] ? 'bg-success' : 'bg-danger' ?> mb-2">
                         <?= $jugador['activo'] ? 'Activo' : 'Inactivo' ?>

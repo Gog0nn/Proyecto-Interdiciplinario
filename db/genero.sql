@@ -75,7 +75,7 @@ CREATE TABLE Jugadores (
     tipo_sangre         VARCHAR(5)     NULL     COMMENT 'Ej: A+, O-, AB+',
     alergias            VARCHAR(255)   NULL,
     enfermedades_base   VARCHAR(255)   NULL,
-    PRIMARY KEY (id_jugador),
+    PRIMARY KEY (id_jugador)
 ) ENGINE=InnoDB;
 
 CREATE TABLE Tutores (
@@ -83,7 +83,7 @@ CREATE TABLE Tutores (
     apellido    VARCHAR(100)  NOT NULL,
     nombre      VARCHAR(100)  NOT NULL,
     contacto    VARCHAR(20)   NOT NULL,
-    PRIMARY KEY (id_tutor),
+    PRIMARY KEY (id_tutor)
 ) ENGINE=InnoDB;
 
 -- =======================================
@@ -201,9 +201,9 @@ INSERT INTO Jugadores (apellido, nombre, CI, fecha_nac, nro_contacto, genero, di
     ('Torres',  'Diego',  '6345678', '2012-01-15', '0984333444', 1, 'San Roque 78', 'Posadas', 'B+');
 
 INSERT INTO Tutores (apellido, nombre, contacto) VALUES
-    ('López',   'Roberto', '0985111000', ),
-    ('Benítez', 'María',   '0985222000', ),
-    ('Torres',  'Jorge',   '0985333000', );
+    ('López',   'Roberto', '0985111000'),
+    ('Benítez', 'María',   '0985222000'),
+    ('Torres',  'Jorge',   '0985333000');
 
 INSERT INTO jugador_tutor (id_jugador, id_tutor, tipo_relacion) VALUES
     (1, 1, 'padre'),

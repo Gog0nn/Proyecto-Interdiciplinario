@@ -12,7 +12,13 @@ if (!$id) {
 
 // Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $ok = $jugador->update([
+    $foto = null;
+    // Verificamos si se subió una foto correctamente
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $foto = file_get_contents($_FILES['foto']['tmp_name']);
+    }
+
+    $datos = [
         'id_jugador'   => $id,
         'apellido'     => $_POST['apellido']     ?? '',
         'nombre'       => $_POST['nombre']       ?? '',
@@ -24,7 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'direccion'    => $_POST['direccion']    ?? '',
         'lugar_nac'    => $_POST['lugar_nac']    ?? '',
         'tipo_sangre'  => $_POST['tipo_sangre']  ?? '',
-    ]);
+        'alergias'     => $_POST['alergias']     ?? '', // Asegúrate de que estos campos existan en el formulario si los necesitas
+        'enfermedades_base' => $_POST['enfermedades_base'] ?? '',
+        'foto'         => $foto
+    ];
+
+    $ok = $jugador->update($datos);
 
     header('Location: index.php?ok=' . ($ok ? 2 : 0));
     exit;
@@ -51,7 +62,7 @@ if (!$fila) {
 
 <div class="card" style="max-width: 600px;">
     <div class="card-body">
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <div class="row g-3">
 
                 <div class="col-6">
@@ -122,6 +133,23 @@ if (!$fila) {
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Alergias</label>
+                    <input type="text" name="alergias" class="form-control"
+                           value="<?= htmlspecialchars($fila['alergias'] ?? '') ?>">
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">Enfermedades Base</label>
+                    <input type="text" name="enfermedades_base" class="form-control"
+                           value="<?= htmlspecialchars($fila['enfermedades_base'] ?? '') ?>">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Foto del Jugador</label>
+                    <input type="file" name="foto" class="form-control" accept="image/*">
                 </div>
 
                 <div class="col-12 d-flex gap-2 mt-2">

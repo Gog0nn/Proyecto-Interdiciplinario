@@ -13,39 +13,82 @@ El club necesita resolver la dispersión de información causada por registros m
 - **Seguimiento Físico:** Historial de evolución del jugador (peso y altura en diferentes fechas).
 - **Estado del Jugador:** Control de jugadores activos e inactivos.
 
-## 🗄️ Modelo de Datos (DER)
+## 📊 Modelo de Datos
 
 ```text
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│     GENERO      │       │    JUGADORES    │       │     TUTORES     │
-├─────────────────┤       ├─────────────────┤       ├─────────────────┤
-│ id (PK)         │◄────┐ │ id (PK)         │ ┌────►│ id (PK)         │
-│ descripcion     │     └─┤ id_genero (FK)  │ │     │ id_jugador (FK) │
-└─────────────────┘       │ nombre          │─┘     │ nombre          │
-                          │ apellido        │       │ contacto        │
-                          │ ci              │       └─────────────────┘
-                          │ fecha_nac       │
-          ┌───────────────┤ estado          │───────┐
-          │               └─────────────────┘       │
-          ▼                                         ▼
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│   CATEGORIAS    │       │   ACTIVIDADES   │       │   SEGUIMIENTO   │
-├─────────────────┤       ├─────────────────┤       ├─────────────────┤
-│ id (PK)         │◄────┐ │ id (PK)         │       │ id (PK)         │
-│ descripcion     │     └─┤ id_categoria(FK)│       │ id_jugador (FK) │◄──┘
-│ id_entrenador(FK)─────┐ │ fecha           │       │ fecha           │
-└─────────────────┘     │ │ lugar           │       │ peso            │
-          ▲             │ └─────────────────┘       │ altura          │
-          │             │          │                └─────────────────┘
-┌─────────────────┐     │          ▼
-│   ENTRENADORES  │     │ ┌─────────────────┐
-├─────────────────┤     │ │ TIPO_ACTIVIDAD  │
-│ id (PK)         │     │ ├─────────────────┤
-│ nombre          │     └─┤ id (PK)         │
-│ apellido        │       │ descripcion     │
-└─────────────────┘       └─────────────────┘
-```
+  +-----------------------+              +-----------------------+
+  |        GENERO         |              |       TUTORES         |
+  +-----------------------+              +-----------------------+
+  | id_genero (PK)        |              | id_tutor (PK)         |
+  | descripcion           |              | apellido              |
+  +-----------------------+              | nombre                |
+              ^                          | contacto              |
+              | (1:N)                    | id_jugador (FK)       |
+              |                          +-----------------------+
+  +-----------------------+                          |
+  |       JUGADORES       |                          | (N:1)
+  +-----------------------+                          |
+  | id_jugador (PK)       | <------------------------+
+  | apellido              |
+  | nombre                |              +-----------------------+
+  | CI                    | (1:N)        |      SEGUIMIENTO      |
+  | fecha_nac             |------------> +-----------------------+
+  | nro_contacto          |              | id_seguimiento (PK)   |
+  | genero (FK)           |              | id_jugador (FK)       |
+  | activo                |              | fecha_seguimiento     |
+  | direccion             |              | edad                  |
+  | lugar_nac             |              | peso                  |
+  | foto                  |              | altura                |
+  | tipo_sangre           |              | observacion           |
+  | alergias              |              +-----------------------+
+  | enfermedades_base     |
+  +-----------------------+
+    |           |
+    | (1:N)     | (1:N)                  +-----------------------+
+    v           |                        |     ENTRENADORES      |
+  +-------------+---------+              +-----------------------+
+  |      ASISTENCIA       |              | id_entrenador (PK)    |
+  +-----------------------+              | apellido              |
+  | id_asistencia (PK)    |              | nombre                |
+  | id_actividad (FK)     |              | fecha_nac             |
+  | id_jugador (FK)       |              | nro_contacto          |
+  | presente              |              | telefono              |
+  |                       |              | CI                    |
+  |                       |              | foto                  |
+  +-----------------------+              +-----------------------+
+    |                                                |
+    | (N:1)                                          | (1:N)
+    v                                                v
+  +-----------------------+              +-----------------------+
+  |       ACTIVIDAD       |              |     ASIGNACIONES      |
+  +-----------------------+              +-----------------------+
+  | id_actividad (PK)     | (N:1)        | id_entrenador (PK)(FK)|
+  | nombre                |------------> | id_categoria (PK)(FK) |
+  | descripcion           |              | id_genero (PK)(FK)    |
+  | fecha                 |              +-----------------------+
+  | hora                  |                          ^
+  | lugar                 |                          | (N:1)
+  | id_genero (FK)        |                          |
+  | id_categoria (FK) ----+--------------------------+
+  | id_tipo (FK) ---------+
+  +-----------------------+ | (N:1)
+    ^                       v
+    |            +-----------------------+
+    | (N:1)      |     TIPOACTIVIDAD     |
+    |            +-----------------------+
+    |            | id_tipo (PK)          |
+    |            | descripcion           |
+    |            +-----------------------+
+  +-+---------------------+
+  |        DET_JG         |
+  +-----------------------+
+  | id_jugador (PK)(FK)   |
+  | id_actividad (PK)(FK) |
+  | posicion              |
+  | fecha                 |
+  +-----------------------+
 
+```
 Basado en el diagrama de entidad-relación, la base de datos se estructura en las siguientes tablas principales:
 
 - **jugadores:** Almacena datos personales (apellido, nombre, CI, fecha de nacimiento, contacto, dirección, lugar de nacimiento, foto, nro_ficha, tipo_sangre, alergias, enfermedades_base e id_pais). Relacionado con `genero`.
@@ -82,22 +125,35 @@ Basado en el diagrama de entidad-relación, la base de datos se estructura en la
    - **Sistema:** [http://localhost:8090](http://localhost:8090)
    - **phpMyAdmin:** [http://localhost:8091](http://localhost:8091) (Usuario: `root` / Pass: `root`)
 
-## 🚀 Funcionalidades Principales (Backlog)
+## 🚀 Funcionalidades del Sistema
 
-Basado en el plan de desarrollo, se han definido las siguientes áreas de trabajo:
+El sistema ofrece una solución integral para la administración deportiva, organizada en los siguientes módulos:
 
-1.  **Módulo de Jugadores:**
-    *   CRUD (Crear, Leer, Actualizar, Borrar) de Jugadores.
-    *   Gestión de estados (Activo/Inactivo).
-2.  **Módulo de Tutores:**
-    *   Registro y vinculación con jugadores.
-3.  **Módulo de Entrenamiento y Categorías:**
-    *   Gestión de categorías y asignación de entrenadores.
-    *   Registro de actividades (Entrenamientos/Partidos).
-4.  **Módulo de Seguimiento:**
-    *   Control físico (Peso/Altura).
-5.  **Consultas y Reportes:**
-    *   Visualización de información centralizada y organizada.
+1.  **Gestión Integral de Jugadores:**
+    *   **Ficha Técnica Completa:** Registro de datos personales, contacto, dirección y documentos de identidad.
+    *   **Información Médica:** Control de tipos de sangre, alergias y enfermedades de base para garantizar la seguridad del deportista.
+    *   **Categorización Automática:** El sistema calcula la edad del jugador y lo asigna automáticamente a la categoría correspondiente (U13, U15, etc.).
+    *   **Control de Estado:** Posibilidad de dar de alta o baja a jugadores (Activos/Inactivos) según su participación actual.
+
+2.  **Vinculación con Tutores Responsables:**
+    *   Registro obligatorio de un adulto responsable por cada jugador menor de edad.
+    *   Acceso rápido a datos de contacto para emergencias o comunicaciones institucionales.
+
+3.  **Seguimiento Físico y Evolutivo:**
+    *   **Historial Biométrico:** Registro periódico de peso y altura para monitorear el crecimiento y desarrollo físico.
+    *   **Observaciones Técnicas:** Espacio para notas sobre el desempeño o necesidades específicas detectadas en cada control.
+    *   **Visualización Cronológica:** Listado histórico de mediciones para analizar la evolución del deportista en el tiempo.
+
+4.  **Organización de Categorías y Staff Técnico:**
+    *   **Gestión de Entrenadores:** Registro de perfiles profesionales encargados de los grupos.
+    *   **Configuración de Categorías:** Definición de rangos de edad y géneros para organizar los equipos del club.
+
+5.  **Planificación de Actividades:**
+    *   **Agenda Deportiva:** Registro y organización de entrenamientos y partidos.
+    *   **Gestión de Espacios:** Control de lugares, fechas y horarios para evitar superposiciones en el uso de las instalaciones.
+
+6.  **Filtros y Búsqueda Inteligente:**
+    *   Herramientas de filtrado por categoría y género para localizar rápidamente grupos específicos de jugadores o actividades programadas.
 
 ## 🎓 Enfoque Pedagógico
 
@@ -105,4 +161,3 @@ El proyecto se desarrolla bajo la metodología de **Aprendizaje Basado en Proyec
 - Formularios y validaciones.
 - Relaciones entre entidades y operaciones CRUD.
 - Consultas a bases de datos y organización modular.
-
