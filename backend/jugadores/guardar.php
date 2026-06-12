@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $categoria = $jugador->getCategoriaByEdad($_POST['fecha_nac']);
         $categoria_id = (int)($categoria['id'] ?? 0);
 
-        header("Location: ../../frontend/views/jugadores.php?genero={$genero_id}&categoria={$categoria_id}");
+        header("Location:/backend/jugadores/index.php?ok=1&cat_id={$categoria_id}&gen_id={$genero_id}");
         exit();
 
     } else {
