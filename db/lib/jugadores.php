@@ -9,13 +9,14 @@ class jugadores {
 
     public function getALL() {
         $sql = "SELECT j.*,
-                       c.descripcion AS categoria_nombre,
-                       c.edad AS categoria_orden,
+                       c.nombre AS categoria_nombre,
+                       c.edad_min AS categoria_orden,
                        TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) AS edad
                 FROM `Jugadores` j
                 LEFT JOIN `Categoria` c
-                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) <= c.edad
-                ORDER BY c.edad ASC, j.genero ASC, j.apellido ASC";
+                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) >= c.edad_min
+                    AND TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) <= c.edad_max
+                ORDER BY c.edad_min ASC, j.genero ASC, j.apellido ASC";
         return $this->db->query($sql);
     }
 
@@ -99,9 +100,9 @@ class jugadores {
         $hoy = new DateTime();
         $edad = (int)$hoy->diff($fecha)->y;
 
-        $sql = "SELECT id_categoria, descripcion FROM `Categoria`
-            WHERE $edad <= edad
-            ORDER BY edad ASC
+        $sql = "SELECT id_categoria, nombre FROM `Categoria`
+            WHERE $edad >= edad_min AND $edad <= edad_max
+            ORDER BY edad_min ASC
             LIMIT 1";
 
         $rs  = $this->db->query($sql);
@@ -109,7 +110,7 @@ class jugadores {
 
         if (!$row) return ['id' => 0, 'nombre' => 'Sin categoría'];
 
-        return ['id' => (int)$row['id_categoria'], 'nombre' => $row['descripcion']];
+        return ['id' => (int)$row['id_categoria'], 'nombre' => $row['nombre']];
     }
 
     public function getGeneroSlug($genero) {
@@ -128,12 +129,13 @@ class jugadores {
         }
 
         $sql = "SELECT j.*,
-                    c.descripcion AS categoria_nombre,
-                    c.edad AS categoria_orden,
+                    c.nombre AS categoria_nombre,
+                    c.edad_min AS categoria_orden,
                     TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) AS edad
                     FROM `Jugadores` j
                     LEFT JOIN `Categoria` c
-                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) <= c.edad";
+                    ON TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) >= c.edad_min
+                    AND TIMESTAMPDIFF(YEAR, j.fecha_nac, CURDATE()) <= c.edad_max";
 
         if ($id_categoria) {
             $where[] = "c.id_categoria = $id_categoria";
@@ -143,7 +145,7 @@ class jugadores {
             $sql .= " WHERE " . implode(" AND ", $where);
         }
 
-        $sql .= " ORDER BY c.edad ASC, j.genero ASC, j.apellido ASC";
+        $sql .= " ORDER BY c.edad_min ASC, j.genero ASC, j.apellido ASC";
         return $this->db->query($sql);
     }
 }
