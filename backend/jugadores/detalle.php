@@ -56,7 +56,7 @@ include_once '../../template/parciales/templateStart.php';
         <div class="col-md-4 text-center mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <?php 
+                        <?php 
                     $foto_src = "../../assets/img/user-placeholder.png";
                     if (!empty($jugador['foto'])) {
                         // Convertimos el binario (BLOB) a base64 para que el navegador lo interprete
