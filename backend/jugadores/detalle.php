@@ -25,9 +25,9 @@ if (!$jugador) {
 
 // 3. Obtener tutores (Relación directa en la tabla Tutores según tu modelo)
 $rs_tutores = $db->query("
-    SELECT * 
-    FROM Tutores 
-    WHERE id_jugador = $id_jugador
+    SELECT t.* FROM Tutores t
+    INNER JOIN jugador_tutor jt ON t.id_tutor = jt.id_tutor
+    WHERE jt.id_jugador = $id_jugador
 ");
 
 $tutores = [];

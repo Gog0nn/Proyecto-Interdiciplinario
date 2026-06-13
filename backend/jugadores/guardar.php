@@ -51,6 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($errores)) {
         $fila        = $_POST;
+        $fila['tutores'] = $_POST['tutores'] ?? []; 
+        
         $target      = "guardar.php";
         $titulo_form = "Registrar jugador";
         include_once __DIR__ . "/../../db/lib/tutores.php";
