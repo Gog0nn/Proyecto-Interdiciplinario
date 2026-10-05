@@ -19,5 +19,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .mi-fondo-basquet {
+            background-image: url('/template/img/basquet.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
     </style>
 </head>

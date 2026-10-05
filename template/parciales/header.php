@@ -14,7 +14,7 @@
                     <a class="nav-link" href="/backend/tutores/index.php" style="font-size: 1.1rem;">Tutores</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/template/contactos.php" style="font-size: 1.1rem;">Contacto</a>
+                    <a class="nav-link" href="/template/contactos.php" style="font-size: 1.1rem;">Contáctanos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/template/acercade.php" style="font-size: 1.1rem;">Nosotros</a>
