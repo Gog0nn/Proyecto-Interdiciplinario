@@ -28,7 +28,7 @@ $nombre = "Administrador de Tutores";
         } ?>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle">
+            <table class="table table-striped table-bordered align-middle" data-datatable data-datatable-no-order="4,5">
                 <thead>
                     <tr>
                         <th colspan="6" class="text-center">Lista de Tutores</th>
@@ -79,6 +79,7 @@ $nombre = "Administrador de Tutores";
                 <?php
                 }
                 ?>
+                </tbody>
             </table>
         </div>
 <?php include(__DIR__ . "/../../template/parciales/templateEnd.php"); ?>

@@ -12,7 +12,8 @@ class Seguimiento {
                     s.fecha AS fecha_seguimiento,
                     s.edad,
                     s.peso,
-                    s.altura
+                    s.altura,
+                    s.observacion
                 FROM Jugadores j
                 LEFT JOIN Seguimiento s ON j.id_jugador = s.id_jugador
                 WHERE j.id_jugador = ?
@@ -42,9 +43,10 @@ class Seguimiento {
         $edad = (int)($datos['edad'] ?? 0);
         $peso = (float)($datos['peso'] ?? 0);
         $altura = (float)($datos['altura'] ?? 0);
+        $observacion = $this->db->real_escape_string($datos['observacion'] ?? '');
 
-        $sql = "INSERT INTO `Seguimiento` (`id_jugador`, `fecha`, `edad`, `peso`, `altura`)
-            VALUES ($id_jugador, '$fecha', $edad, $peso, $altura)";
+        $sql = "INSERT INTO `Seguimiento` (`id_jugador`, `fecha`, `edad`, `peso`, `altura`, `observacion`)
+            VALUES ($id_jugador, '$fecha', $edad, $peso, $altura, '$observacion')";
 
         $rs = $this->db->query($sql);
         return $rs;
@@ -57,13 +59,15 @@ class Seguimiento {
         $edad = (int)($datos['edad'] ?? 0);
         $peso = (float)($datos['peso'] ?? 0);
         $altura = (float)($datos['altura'] ?? 0);
+        $observacion = $this->db->real_escape_string($datos['observacion'] ?? '');
 
         $sql = "UPDATE `Seguimiento` SET
             `id_jugador` = $id_jugador,
             `fecha` = '$fecha',
             `edad` = $edad,
             `peso` = $peso,
-            `altura` = $altura
+            `altura` = $altura,
+            `observacion` = '$observacion'
             WHERE `id_seguimiento` = $id_seguimiento";
 
         $rs = $this->db->query($sql);

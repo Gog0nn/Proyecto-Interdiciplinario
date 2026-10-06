@@ -13,6 +13,7 @@ $errores     = [];
 
 // Obtener lista de tutores disponibles
 $tutores_rs = $tutoresObj->getall();
+$relaciones_tutores = [];
 
 $fila = [
     "id_jugador"   => "",

@@ -37,18 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'foto'         => $foto
     ];
 
-    $ok = $jugador->update($datos);
-
-    // Procesar tutores asignados
-    if ($ok && isset($_POST['tutores'])) {
-        // Eliminar tutores previos
-        $con->query("DELETE FROM jugador_tutor WHERE id_jugador = $id");
-
-        // Asignar nuevos tutores
-        foreach ($_POST['tutores'] as $tutor_id) {
-            $tutor_id = (int)$tutor_id;
-            $con->query("INSERT IGNORE INTO jugador_tutor (id_jugador, id_tutor) VALUES ($id, $tutor_id)");
+    $relaciones = json_decode($_POST['tutor_relaciones'] ?? '[]', true);
+    $ok = false;
+    try {
+        $con->begin_transaction();
+        $ok = $jugador->update($datos);
+        if (!$ok) {
+            throw new RuntimeException('No se pudo actualizar el jugador.');
         }
+        $tutores->guardarRelaciones($id, $relaciones);
+        $con->commit();
+    } catch (Throwable $error) {
+        $con->rollback();
     }
 
     header('Location: index.php?ok=' . ($ok ? 2 : 0));
@@ -64,16 +64,11 @@ if (!$fila) {
     exit;
 }
 
-// Obtener tutores disponibles
-$tutores_disponibles = $tutores->getall();
-
-// Obtener tutores asignados al jugador actual
-$tutores_asignados = [];
-$result = $con->query("SELECT id_tutor FROM jugador_tutor WHERE id_jugador = $id");
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $tutores_asignados[] = $row['id_tutor'];
-    }
+// Obtener relaciones completas para prellenar el módulo de tutores.
+$relaciones_tutores = [];
+$result = $tutores->obtenerRelacionesPorJugador($id);
+while ($row = $result->fetch_assoc()) {
+    $relaciones_tutores[] = $row;
 }
 ?>
 
@@ -170,22 +165,7 @@ if ($result) {
                     <input type="file" name="foto" class="form-control" accept="image/*">
                 </div>
 
-                <div class="col-12">
-                    <label class="form-label">Tutores Asignados <span class="text-danger">*</span></label>
-                    <select name="tutores[]" class="form-select" multiple required>
-                        <?php
-                        if ($tutores_disponibles) {
-                            while ($tutor = $tutores_disponibles->fetch_assoc()) {
-                                $selected = in_array($tutor['id_tutor'], $tutores_asignados) ? 'selected' : '';
-                                echo "<option value='{$tutor['id_tutor']}' $selected>";
-                                echo htmlspecialchars($tutor['apellido'] . ", " . $tutor['nombre']);
-                                echo "</option>";
-                            }
-                        }
-                        ?>
-                    </select>
-                    <small class="form-text text-muted">Selecciona al menos un tutor. Usa Ctrl+Click para múltiples.</small>
-                </div>
+                <?php include __DIR__ . '/_tutores_edicion.php'; ?>
 
                 <div class="col-12 d-flex gap-2 mt-2">
                     <button type="submit" class="btn btn-warning">

@@ -98,9 +98,10 @@ while ($fila = $rs->fetch_assoc()) {
           </div>
 
           <div class="table-responsive">
-            <table class="table table-hover align-middle border-light">
+            <table class="table table-hover align-middle border-light" data-datatable data-datatable-no-order="0,13,14">
               <thead class="table-light text-secondary">
                 <tr>
+                  <th class="text-center">Foto</th>
                   <th>Estado</th>
                   <th>Categoría</th>
                   <th>Género</th>
@@ -120,6 +121,18 @@ while ($fila = $rs->fetch_assoc()) {
               <tbody>
                 <?php foreach ($jugadores as $fila): ?>
                 <tr>
+                  <td class="text-center">
+                    <?php if (!empty($fila['foto'])): ?>
+                      <img src="data:image/jpeg;base64,<?= base64_encode($fila['foto']) ?>"
+                           alt="Foto de <?= htmlspecialchars($fila['nombre'] . ' ' . $fila['apellido']) ?>"
+                           class="rounded-circle border" style="width: 48px; height: 48px; object-fit: cover;">
+                    <?php else: ?>
+                      <span class="d-inline-flex align-items-center justify-content-center rounded-circle border bg-light text-secondary"
+                            style="width: 48px; height: 48px;" title="Sin foto">
+                        <i class="bi bi-person fs-4"></i>
+                      </span>
+                    <?php endif; ?>
+                  </td>
                   <td>
                     <?php if (($fila['activo'] ?? 1) == 1): ?>
                       <span class="badge bg-success bg-opacity-10 text-success px-2 py-1.5 border border-success border-opacity-25 rounded-pill">Activo</span>

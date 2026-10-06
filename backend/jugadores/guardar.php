@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include_once __DIR__ . "/validar_jugador.php";
     $errores = validarJugador($_POST);
 
-    // Validar que tenga al menos un tutor asignado
-    if (empty($_POST['tutores']) || !is_array($_POST['tutores']) || count($_POST['tutores']) === 0) {
+    $relaciones = json_decode($_POST['tutor_relaciones'] ?? '[]', true);
+    if (!is_array($relaciones) || count($relaciones) === 0) {
         $errores[] = "Debe asignar al menos un tutor al jugador";
     }
 
@@ -25,17 +25,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $datos = array_merge($_POST, ['foto' => $foto, 'activo' => 1]);
-        $result = $jugador->insert($datos);
+        $result = false;
+        try {
+            $con->begin_transaction();
+            $result = $jugador->insert($datos);
+            if (!$result) {
+                throw new RuntimeException('Error al guardar el jugador.');
+            }
+            $tutoresObj->guardarRelaciones($con->insert_id, $relaciones);
+            $con->commit();
+        } catch (Throwable $error) {
+            $con->rollback();
+        }
 
         if ($result) {
-            // Obtener el ID del jugador recién creado
-            $last_id = $con->insert_id;
-
-            // Asignar tutores al jugador
-            foreach ($_POST['tutores'] as $tutor_id) {
-                $tutor_id = (int)$tutor_id;
-                $con->query("INSERT IGNORE INTO jugador_tutor (id_jugador, id_tutor) VALUES ($last_id, $tutor_id)");
-            }
 
             $genero_id = (int)$_POST['genero'];
             $categoria = $jugador->getCategoriaByEdad($_POST['fecha_nac']);
@@ -51,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($errores)) {
         $fila        = $_POST;
-        $fila['tutores'] = $_POST['tutores'] ?? []; 
+        $fila['tutor_relaciones'] = $relaciones;
         
         $target      = "guardar.php";
         $titulo_form = "Registrar jugador";

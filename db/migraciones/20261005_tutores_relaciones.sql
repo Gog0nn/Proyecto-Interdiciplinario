@@ -1,0 +1,3 @@
+ALTER TABLE Tutores
+    MODIFY COLUMN id_jugador INT(10) UNSIGNED NULL;
+
