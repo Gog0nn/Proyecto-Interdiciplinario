@@ -25,9 +25,10 @@ $rs = $entrenadores->getAll();
         } ?>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle">
+            <table class="table table-striped table-bordered align-middle" data-datatable data-datatable-no-order="5,6,7">
+                <thead>
                 <tr>
-                    <th colspan="9" class="text-center">Lista de entrenadores</th>
+                    <th colspan="8" class="text-center">Lista de entrenadores</th>
                 </tr>
                 <tr>
                     <th>ID</th>
@@ -40,6 +41,8 @@ $rs = $entrenadores->getAll();
                         <a href="guardar.php" class="btn btn-outline-success btn-sm">Nuevo Entrenador</a>
                     </th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php
                 while ($fila = $rs->fetch_assoc()) {
                 ?>
@@ -56,6 +59,7 @@ $rs = $entrenadores->getAll();
                 <?php
                 }
                 ?>
+                </tbody>
             </table>
         </div>
 <?php include(__DIR__ . "/../../template/parciales/templateEnd.php"); ?>

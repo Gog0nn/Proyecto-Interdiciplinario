@@ -2,6 +2,10 @@
 <?php include(__DIR__ . "/head.php"); ?>
 <body class="d-flex flex-column vh-100 overflow-hidden">
     <?php include(__DIR__ . "/header.php"); ?>
+    <button type="button" id="sidebarToggle" class="btn btn-success btn-sm sidebar-toggle" aria-controls="appSidebar" aria-expanded="true" title="Ocultar menú">
+        <i class="bi bi-list"></i>
+        <span class="visually-hidden">Mostrar u ocultar menú</span>
+    </button>
     
     <div class="container-fluid p-0 flex-grow-1 overflow-hidden">
         <div class="row g-0 flex-nowrap h-100">

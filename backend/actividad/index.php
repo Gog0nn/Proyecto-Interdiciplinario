@@ -59,7 +59,8 @@ $rs = $evento->getFiltered($id_categoria, $id_tipo);//Traemos el resultado de la
     </a>
 </form>
 
-<table class="table table-striped ">
+<table class="table table-striped" data-datatable data-datatable-no-order="8,9">
+<thead>
 <tr>
     <!--<th>id</th>-->
     <th>nombre</th>
@@ -73,12 +74,13 @@ $rs = $evento->getFiltered($id_categoria, $id_tipo);//Traemos el resultado de la
     <th colspan="2"><a href="nuevo.php" class="btn btn-outline-primary">Nueva actividad</a></th>
 
 </tr>
+</thead>
 
+<tbody>
 <?php 
 while ($fila= $rs->fetch_assoc()) //loop while que se ejecuta mientras haya fila en el array asociativo
     { ?> 
 <tr>
-    <input type="hidden" name="id_actividad" value="<?php echo $fila["id_actividad"]; ?>">
     <td> <?php echo $fila["nombre"]; ?></td>
     <td> <?php echo $fila["descripcion"]; ?></td>
     <td> <?php echo $fila["fecha"]; ?></td>
@@ -135,7 +137,7 @@ while ($fila= $rs->fetch_assoc()) //loop while que se ejecuta mientras haya fila
 
 <?php   }
 ?>
-
+</tbody>
 </table>
 
 <?php include_once '../../template/parciales/templateEnd.php'; ?>  

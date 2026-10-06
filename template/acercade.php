@@ -1,42 +1,45 @@
-<?php include(__DIR__ . "/parciales/templateStart.php");?>
-<div class="container py-5">
-    <div class="row align-items-center">
-        <div class="col-lg-6 mb-4 mb-lg-0">
-            <h1 class="display-4 fw-bold mb-4">Sobre Nosotros</h1>
-            <p class="lead">El Club Sacachispas de Encarnación, Paraguay, mantiene una activa actividad en el básquetbol, enfocándose tanto en la competencia como en la inclusión deportiva.</p>
-            
-            <div class="mb-4">
-                <h5 class="fw-bold text-primary"><i class="bi bi-trophy me-2"></i>Actividades Recientes</h5>
-                <p>Torneo Interno: En enero de 2023, el club organizó un torneo interno con exjugadores de todas las edades, disputado en su sede ubicada en la calle Juan León Mallorquín.</p>
+<?php include(__DIR__ . "/parciales/templateStart.php"); ?>
+<div class="container-fluid py-4 px-3 px-lg-5">
+    <section class="border-bottom pb-4 mb-4">
+        <div class="row align-items-end g-4">
+            <div class="col-lg-8">
+                <span class="text-success fw-semibold small text-uppercase">Identidad del club</span>
+                <h1 class="display-5 fw-bold mb-3">Sacachispas: básquet que reúne generaciones</h1>
+                <p class="lead text-secondary mb-0">Desde Encarnación, construimos un espacio donde la competencia, la formación y la inclusión comparten la misma cancha.</p>
             </div>
+            <div class="col-lg-4 text-lg-end"><span class="badge text-bg-success px-3 py-2"><i class="bi bi-geo-alt me-1"></i>Encarnación, Paraguay</span></div>
+        </div>
+    </section>
 
-            <div class="mb-4">
-                <h5 class="fw-bold text-success"><i class="bi bi-heart me-2"></i>Básquet Inclusivo</h5>
-                <p>El "Team Angiru" reúne a más de 30 participantes con diversas capacidades. Prácticas: Martes y jueves de 16:00 a 17:15 horas.</p>
-            </div>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <section class="border rounded-3 p-4 h-100">
+                <h2 class="h4 fw-bold mb-4"><i class="bi bi-clock-history text-success me-2"></i>Historia viva</h2>
+                <div class="d-flex gap-3 mb-4">
+                    <div class="text-success fs-4"><i class="bi bi-flag"></i></div>
+                    <div><h3 class="h6 fw-bold mb-1">Una casa para el básquet local</h3><p class="text-secondary mb-0">El club sostiene una actividad deportiva cercana a las familias de Encarnación, con categorías formativas y espacios para seguir compitiendo.</p></div>
+                </div>
+                <div class="d-flex gap-3 mb-4">
+                    <div class="text-success fs-4"><i class="bi bi-trophy"></i></div>
+                    <div><h3 class="h6 fw-bold mb-1">Enero de 2023 · Torneo interno</h3><p class="text-secondary mb-0">Exjugadores y nuevas generaciones volvieron a encontrarse en la sede de Juan León Mallorquín para compartir una jornada de competencia y memoria.</p></div>
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="text-success fs-4"><i class="bi bi-heart"></i></div>
+                    <div><h3 class="h6 fw-bold mb-1">Team Angiru · Inclusión en movimiento</h3><p class="text-secondary mb-0">Más de 30 participantes forman parte de este espacio inclusivo, con prácticas los martes y jueves de 16:00 a 17:15.</p></div>
+                </div>
+            </section>
         </div>
 
-        <div class="col-lg-6">
-            <!-- Carrusel de Imágenes -->
-            <div id="carouselSacachispas" class="carousel slide shadow-lg rounded-4 overflow-hidden border" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="img/sacachispas.png" class="d-block w-100 p-4 bg-white" alt="Ilustración Sacachispas" style="height: 400px; object-fit: contain;">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/image.png" class="d-block w-100 p-5 bg-white" alt="Escudo Sacachispas" style="height: 400px; object-fit: contain;">
-                    </div>
+        <div class="col-lg-5">
+            <section id="carouselSacachispas" class="carousel slide border rounded-3 overflow-hidden h-100" data-bs-ride="carousel">
+                <div class="carousel-inner h-100">
+                    <div class="carousel-item active h-100"><img src="img/sacachispas.png" class="d-block w-100 h-100 p-4 bg-white" alt="Identidad del Club Sacachispas" style="min-height: 360px; object-fit: contain;"></div>
+                    <div class="carousel-item h-100"><img src="img/image.png" class="d-block w-100 h-100 p-5 bg-white" alt="Escudo del Club Sacachispas" style="min-height: 360px; object-fit: contain;"></div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselSacachispas" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselSacachispas" data-bs-slide="next">
-                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
-                </button>
-            </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselSacachispas" data-bs-slide="prev" aria-label="Imagen anterior"><span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span></button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselSacachispas" data-bs-slide="next" aria-label="Imagen siguiente"><span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span></button>
+            </section>
         </div>
     </div>
 </div>
-<?php include(__DIR__ . "/parciales/templateEnd.php");?>
+<?php include(__DIR__ . "/parciales/templateEnd.php"); ?>

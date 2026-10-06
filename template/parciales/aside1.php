@@ -16,7 +16,7 @@ while ($row = $result->fetch_assoc()) {
 $generos = getAll();
 ?>
 
-<aside class="d-flex flex-column p-3 border-end bg-light" style="width: 280px;">
+<aside id="appSidebar" class="d-flex flex-column p-3 border-end bg-light" style="width: 280px;">
     <div class="mb-2 ps-2 fw-bold text-muted small">Menú</div>
     <div class="list-group mb-4 list-group-flush border-bottom">
         
