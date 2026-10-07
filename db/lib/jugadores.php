@@ -32,7 +32,8 @@ class jugadores {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("sssssiissssss", 
+        $foto = $datos['foto'] ?? null;
+        $stmt->bind_param("sssssiissbsss", 
             $datos['apellido'], 
             $datos['nombre'], 
             $datos['CI'], 
@@ -42,38 +43,35 @@ class jugadores {
             $datos['activo'], 
             $datos['direccion'], 
             $datos['lugar_nac'], 
-            $datos['foto'], 
+            $foto,
             $datos['tipo_sangre'], 
             $datos['alergias'], 
             $datos['enfermedades_base']
         );
+        if ($foto !== null) {
+            $stmt->send_long_data(9, $foto);
+        }
         return $stmt->execute();
     }
 
     public function update($datos) {
+        $foto = $datos['foto'] ?? null;
+        $incluye_foto = $foto !== null;
+        $foto_sql = $incluye_foto ? ', `foto` = ?' : '';
         $sql = "UPDATE `Jugadores` SET
                 `apellido` = ?, `nombre` = ?, `CI` = ?, `fecha_nac` = ?,
                 `nro_contacto` = ?, `genero` = ?, `direccion` = ?,
-                `lugar_nac` = ?, `foto` = ?, `tipo_sangre` = ?, `alergias` = ?,
-                `enfermedades_base` = ?
+                `lugar_nac` = ?, `tipo_sangre` = ?, `alergias` = ?,
+                `enfermedades_base` = ?$foto_sql
                 WHERE `id_jugador` = ?";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("sssssissssssi",
-            $datos['apellido'],
-            $datos['nombre'],
-            $datos['CI'],
-            $datos['fecha_nac'],
-            $datos['nro_contacto'],
-            $datos['genero'],
-            $datos['direccion'],
-            $datos['lugar_nac'],
-            $datos['foto'],
-            $datos['tipo_sangre'],
-            $datos['alergias'],
-            $datos['enfermedades_base'],
-            $datos['id_jugador']
-        );
+        if ($incluye_foto) {
+            $stmt->bind_param("sssssisssssbi", $datos['apellido'], $datos['nombre'], $datos['CI'], $datos['fecha_nac'], $datos['nro_contacto'], $datos['genero'], $datos['direccion'], $datos['lugar_nac'], $datos['tipo_sangre'], $datos['alergias'], $datos['enfermedades_base'], $foto, $datos['id_jugador']);
+            $stmt->send_long_data(11, $foto);
+        } else {
+            $stmt->bind_param("sssssissssssi", $datos['apellido'], $datos['nombre'], $datos['CI'], $datos['fecha_nac'], $datos['nro_contacto'], $datos['genero'], $datos['direccion'], $datos['lugar_nac'], $datos['tipo_sangre'], $datos['alergias'], $datos['enfermedades_base'], $datos['id_jugador']);
+        }
         return $stmt->execute();
     }
 

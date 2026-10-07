@@ -17,6 +17,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errores[] = "Debe asignar al menos un tutor al jugador";
     }
 
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['foto']['error'] !== UPLOAD_ERR_OK) {
+            $errores[] = "No se pudo subir la foto. Verifica que no supere 2 MB.";
+        } elseif ($_FILES['foto']['size'] > 2 * 1024 * 1024 || @getimagesize($_FILES['foto']['tmp_name']) === false) {
+            $errores[] = "La foto debe ser una imagen válida de hasta 2 MB.";
+        }
+    }
+
     if (empty($errores)) {
         $foto = null;
         // Verificamos si se subió una foto correctamente

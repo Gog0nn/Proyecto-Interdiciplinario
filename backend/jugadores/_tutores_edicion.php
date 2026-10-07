@@ -1,32 +1,179 @@
 <div class="col-12">
   <div class="border rounded p-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <div><h4 class="h5 mb-1">Tutor / Responsable Legal</h4><small class="text-muted">Busca por nombre, apellido o contacto.</small></div>
-      <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#nuevoTutorModal"><i class="bi bi-person-plus"></i> Nuevo Tutor</button>
+      <div>
+        <h4 class="h5 mb-1">Tutor / Responsable Legal</h4>
+        <small class="text-muted">Busca por nombre, apellido o contacto.</small>
+      </div>
+      <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#nuevoTutorModal">
+        <i class="bi bi-person-plus"></i> Nuevo Tutor
+      </button>
     </div>
-    <div class="input-group mb-2"><input id="tutor_busqueda_edicion" class="form-control" placeholder="Escribe al menos 3 caracteres" autocomplete="off"><button type="button" id="limpiar_tutor_edicion" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></button></div>
+    <div class="input-group mb-2">
+      <input id="tutor_busqueda_edicion" class="form-control" placeholder="Escribe al menos 3 caracteres" autocomplete="off">
+      <button type="button" id="limpiar_tutor_edicion" class="btn btn-outline-secondary">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
     <div id="tutor_resultados_edicion" class="list-group mb-3"></div>
-    <div id="tutor_seleccionado_edicion" class="d-none bg-light border rounded p-3 mb-3"><strong id="tutor_nombre_edicion"></strong><div class="row g-2 mt-1 align-items-end"><div class="col-md-8"><label class="form-label">Parentesco</label><select id="tutor_parentesco_edicion" class="form-select"><option>Padre</option><option>Madre</option><option selected>Tutor Legal</option><option>Abuelo/a</option><option>Otro</option></select></div><div class="col-md-4"><button type="button" id="agregar_tutor_edicion" class="btn btn-primary w-100">Agregar</button></div></div></div>
+    <div id="tutor_seleccionado_edicion" class="d-none bg-light border rounded p-3 mb-3">
+      <strong id="tutor_nombre_edicion"></strong>
+      <div class="row g-2 mt-1 align-items-end">
+        <div class="col-md-8">
+          <label class="form-label">Parentesco</label>
+          <select id="tutor_parentesco_edicion" class="form-select">
+            <option>Padre</option>
+            <option>Madre</option>
+            <option selected>Tutor Legal</option>
+            <option>Abuelo/a</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <button type="button" id="agregar_tutor_edicion" class="btn btn-primary w-100">Agregar</button>
+        </div>
+      </div>
+    </div>
     <div id="tutores_asignados_edicion" class="vstack gap-2"></div>
     <input type="hidden" name="tutor_relaciones" id="tutor_relaciones_edicion">
   </div>
 </div>
-  <div class="modal fade" id="nuevoTutorModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Registrar nuevo tutor</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div id="nuevo_tutor_edicion"><div class="modal-body"><div id="error_tutor_edicion" class="alert alert-danger d-none"></div><div class="row g-2"><div class="col-6"><label class="form-label">Nombre</label><input id="nuevo_nombre_edicion" class="form-control" required></div><div class="col-6"><label class="form-label">Apellido</label><input id="nuevo_apellido_edicion" class="form-control" required></div><div class="col-12"><label class="form-label">Teléfono</label><input id="nuevo_contacto_edicion" class="form-control" required></div><div class="col-7"><label class="form-label">Parentesco</label><select id="nuevo_parentesco_edicion" class="form-select"><option>Padre</option><option>Madre</option><option selected>Tutor Legal</option><option>Abuelo/a</option><option>Otro</option></select></div><div class="col-5 form-check align-self-end mb-2"><input id="nuevo_principal_edicion" class="form-check-input" type="checkbox"><label class="form-check-label">Principal</label></div></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" id="guardar_nuevo_tutor_edicion" class="btn btn-primary">Guardar y asignar</button></div></div></div></div></div>
+
+<div class="modal fade" id="nuevoTutorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registrar nuevo tutor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="nuevo_tutor_edicion">
+        <div class="modal-body">
+          <div id="error_tutor_edicion" class="alert alert-danger d-none"></div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label">Nombre</label>
+              <!-- Se eliminó required -->
+              <input id="nuevo_nombre_edicion" class="form-control">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Apellido</label>
+              <!-- Se eliminó required -->
+              <input id="nuevo_apellido_edicion" class="form-control">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Teléfono</label>
+              <!-- Se eliminó required -->
+              <input id="nuevo_contacto_edicion" class="form-control">
+            </div>
+            <div class="col-7">
+              <label class="form-label">Parentesco</label>
+              <select id="nuevo_parentesco_edicion" class="form-select">
+                <option>Padre</option>
+                <option>Madre</option>
+                <option selected>Tutor Legal</option>
+                <option>Abuelo/a</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="col-5 form-check align-self-end mb-2">
+              <input id="nuevo_principal_edicion" class="form-check-input" type="checkbox">
+              <label class="form-check-label">Principal</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" id="guardar_nuevo_tutor_edicion" class="btn btn-primary">Guardar y asignar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
   const relaciones = <?= json_encode($relaciones_tutores ?? [], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-  const $ = (id) => document.getElementById(id); let actual = null; let timer;
+  const $ = (id) => document.getElementById(id); 
+  let actual = null; 
+  let timer;
+
   const esc = (v) => String(v ?? '').replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
   const sync = () => $('tutor_relaciones_edicion').value = JSON.stringify(relaciones);
-  const render = () => { $('tutores_asignados_edicion').innerHTML = relaciones.length ? relaciones.map((r,i) => `<div class="border rounded p-2 d-flex justify-content-between"><span><strong>${esc(r.apellido)}, ${esc(r.nombre)}</strong><br><small>${esc(r.contacto)} · ${esc(r.tipo_relacion)}</small></span><button type="button" class="btn btn-outline-danger btn-sm quitar-edicion" data-i="${i}"><i class="bi bi-trash"></i></button></div>`).join('') : '<small class="text-muted">No hay tutores asignados.</small>'; sync(); };
-  const buscar = async () => { const q = $('tutor_busqueda_edicion').value.trim(); $('tutor_resultados_edicion').innerHTML = ''; if (q.length < 3) return; const r = await fetch(`../tutores/buscar.php?q=${encodeURIComponent(q)}`); const data = await r.json(); $('tutor_resultados_edicion').innerHTML = data.map((t) => `<button type="button" class="list-group-item list-group-item-action resultado-edicion" data-tutor='${JSON.stringify(t).replace(/'/g,'&#039;')}'>${esc(t.apellido)}, ${esc(t.nombre)} · ${esc(t.contacto)}</button>`).join('') || '<div class="list-group-item text-muted">No se encontraron tutores.</div>'; };
-  const select = (t) => { actual = t; $('tutor_nombre_edicion').textContent = `${t.apellido}, ${t.nombre} (${t.contacto || 'sin teléfono'})`; $('tutor_seleccionado_edicion').classList.remove('d-none'); };
-  $('tutor_busqueda_edicion').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(buscar, 250); });
-  $('tutor_resultados_edicion').addEventListener('click', (e) => { const b=e.target.closest('.resultado-edicion'); if(b) select(JSON.parse(b.dataset.tutor)); });
-  $('limpiar_tutor_edicion').addEventListener('click', () => { $('tutor_busqueda_edicion').value=''; $('tutor_resultados_edicion').innerHTML=''; });
-  $('agregar_tutor_edicion').addEventListener('click', () => { if (!actual || relaciones.some((r) => Number(r.id_tutor) === Number(actual.id_tutor))) return; relaciones.push({...actual, tipo_relacion:$('tutor_parentesco_edicion').value}); render(); });
-  $('tutores_asignados_edicion').addEventListener('click', (e) => { const b=e.target.closest('.quitar-edicion'); if(b) { relaciones.splice(Number(b.dataset.i),1); render(); } });
-  $('guardar_nuevo_tutor_edicion').addEventListener('click', async () => { const d={nombre:$('nuevo_nombre_edicion').value.trim(),apellido:$('nuevo_apellido_edicion').value.trim(),contacto:$('nuevo_contacto_edicion').value.trim(),tipo_relacion:$('nuevo_parentesco_edicion').value,jugador_id:<?= (int)$id ?>}; const r=await fetch('../tutores/guardar_rapido.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}); const data=await r.json(); if(!r.ok){$('error_tutor_edicion').textContent=data.error||'No se pudo guardar.'; $('error_tutor_edicion').classList.remove('d-none'); return;} relaciones.push({...data.tutor,tipo_relacion:d.tipo_relacion}); render(); bootstrap.Modal.getOrCreateInstance($('nuevoTutorModal')).hide(); });
-  document.querySelector('form[method="POST"]').addEventListener('submit', (e) => { if(!relaciones.length){e.preventDefault(); alert('Asigna al menos un tutor.');} }); render();
+  
+  const render = () => { 
+    $('tutores_asignados_edicion').innerHTML = relaciones.length ? relaciones.map((r,i) => `<div class="border rounded p-2 d-flex justify-content-between"><span><strong>${esc(r.apellido)}, ${esc(r.nombre)}</strong><br><small>${esc(r.contacto)} · ${esc(r.tipo_relacion)}</small></span><button type="button" class="btn btn-outline-danger btn-sm quitar-edicion" data-i="${i}"><i class="bi bi-trash"></i></button></div>`).join('') : '<small class="text-muted">No hay tutores asignados.</small>'; 
+    sync(); 
+  };
+
+  const buscar = async () => { 
+    const q = $('tutor_busqueda_edicion').value.trim();$('tutor_resultados_edicion').innerHTML = ''; 
+    if (q.length < 3) return; 
+    const r = await fetch(`../tutores/buscar.php?q=${encodeURIComponent(q)}`); 
+    const data = await r.json(); 
+    $('tutor_resultados_edicion').innerHTML = data.map((t) => `<button type="button" class="list-group-item list-group-item-action resultado-edicion" data-tutor='${JSON.stringify(t).replace(/'/g,'&#039;')}'>${esc(t.apellido)}, ${esc(t.nombre)} · ${esc(t.contacto)}</button>`).join('') || '<div class="list-group-item text-muted">No se encontraron tutores.</div>'; 
+  };
+
+  const select = (t) => { 
+    actual = t; 
+    $('tutor_nombre_edicion').textContent = `${t.apellido}, ${t.nombre} (${t.contacto || 'sin teléfono'})`; 
+    $('tutor_seleccionado_edicion').classList.remove('d-none'); 
+  };
+
+  $('tutor_busqueda_edicion').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(buscar, 250); });$('tutor_resultados_edicion').addEventListener('click', (e) => { const b=e.target.closest('.resultado-edicion'); if(b) select(JSON.parse(b.dataset.tutor)); });
+  $('limpiar_tutor_edicion').addEventListener('click', () => {$('tutor_busqueda_edicion').value=''; $('tutor_resultados_edicion').innerHTML=''; });$('agregar_tutor_edicion').addEventListener('click', () => { if (!actual || relaciones.some((r) => Number(r.id_tutor) === Number(actual.id_tutor))) return; relaciones.push({...actual, tipo_relacion:$('tutor_parentesco_edicion').value}); render(); });$('tutores_asignados_edicion').addEventListener('click', (e) => { const b=e.target.closest('.quitar-edicion'); if(b) { relaciones.splice(Number(b.dataset.i),1); render(); } });
+
+  $('guardar_nuevo_tutor_edicion').addEventListener('click', async () => { 
+    const errBox = $('error_tutor_edicion');
+    errBox.classList.add('d-none');
+
+    const nombre = $('nuevo_nombre_edicion').value.trim();
+    const apellido = $('nuevo_apellido_edicion').value.trim();
+    const contacto = $('nuevo_contacto_edicion').value.trim();
+
+    // Validacion manual al intentar guardar dentro del modal
+    if (!nombre || !apellido || !contacto) {
+      errBox.textContent = 'Por favor completa el nombre, apellido y teléfono del tutor.';
+      errBox.classList.remove('d-none');
+      return;
+    }
+
+    const d = {
+      nombre,
+      apellido,
+      contacto,
+      tipo_relacion: $('nuevo_parentesco_edicion').value,
+      jugador_id: <?= (int)$id ?>
+    };
+
+    const r = await fetch('../tutores/guardar_rapido.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(d)
+    }); 
+    
+    const data = await r.json(); 
+    if (!r.ok) {
+      errBox.textContent = data.error || 'No se pudo guardar.'; 
+      errBox.classList.remove('d-none'); 
+      return;
+    } 
+
+    relaciones.push({...data.tutor, tipo_relacion: d.tipo_relacion}); 
+    render(); 
+    bootstrap.Modal.getOrCreateInstance($('nuevoTutorModal')).hide(); 
+
+    // Limpiar campos del modal al guardar correctamente
+    $('nuevo_nombre_edicion').value = '';
+    $('nuevo_apellido_edicion').value = '';$('nuevo_contacto_edicion').value = '';
+  });
+
+  document.querySelector('form[method="POST"]').addEventListener('submit', (e) => { 
+    if(!relaciones.length){
+      e.preventDefault(); 
+      alert('Asigna al menos un tutor.');
+    } 
+  }); 
+
+  render();
 })();
 </script>
