@@ -19,7 +19,7 @@
                 sidebarToggle.querySelector('i').className = 'bi bi-list';
             });
         }
-
+ 
         document.querySelectorAll('table[data-datatable]').forEach((table) => {
             const disabledColumns = (table.dataset.datatableNoOrder || '')
                 .split(',')

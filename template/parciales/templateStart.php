@@ -1,6 +1,8 @@
 <?php include_once __DIR__ . "/../../db/lib/app.php"; ?>
 <?php
 // Cada página puede cambiarla antes de incluir este archivo
+
+
 $clase_main = $clase_main ?? 'px-3 px-md-5 py-4';
 ?>
 <?php include(__DIR__ . "/head.php"); ?>

@@ -73,7 +73,6 @@ while ($fila = $rs->fetch_assoc()) {
                 <option value="">Todos los géneros</option>
                 <option value="1" <?= $id_genero==1?'selected':'' ?>>Masculino</option>
                 <option value="2" <?= $id_genero==2?'selected':'' ?>>Femenino</option>
-                <option value="3" <?= $id_genero==3?'selected':'' ?>>Mixto</option>
             </select>
             <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
                 <i class="bi bi-filter me-1"></i> Filtrar
