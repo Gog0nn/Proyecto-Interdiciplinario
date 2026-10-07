@@ -6,24 +6,26 @@ $actividad = new Actividad($con);
 
 // $_REQUEST $_GET $_POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validaciones
     include_once "validar_actividad.php";
     $errores = validarActividad($_POST);
 
     if (empty($errores)) {
-        $actividad->update($_POST);
-        header("Location: index.php?ok=2");
-        exit();
-    } else {
-        $fila = $_POST;
-        $target = "actualizar.php";
-        $titulo_form = "Editar Actividad";
-        include_once '../../template/parciales/templateStart.php';
-        include "_form.php";
-        include_once '../../template/parciales/templateEnd.php';
-        exit();
+        try {
+            $actividad->update($_POST);
+            header("Location: index.php?ok=2");
+            exit();
+        } catch (mysqli_sql_exception $e) {
+            error_log($e->getMessage());   // el detalle queda en el log, no en pantalla
+            $errores[] = "No se pudo guardar la actividad. Revisa los datos e intenta de nuevo.";
+        }
     }
-} else {
-    echo "No llegaron valores por POST";
+
+    $fila = $_POST;
+    $target = "actualizar.php";
+    $titulo_form = "Editar Actividad";
+    include_once '../../template/parciales/templateStart.php';
+    include "_form.php";
+    include_once '../../template/parciales/templateEnd.php';
+    exit();
 }
 ?>

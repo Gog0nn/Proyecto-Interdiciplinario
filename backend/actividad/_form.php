@@ -5,7 +5,10 @@
   <title>Formulario de Actividades</title>
 </head>
 <body>
-
+<?php
+include_once __DIR__ . '/validar_actividad.php';
+[$fecha_min, $fecha_max] = rangoFechaActividad();
+?>
   <h2><?php echo $titulo_form; ?></h2>
  <!-- //Imprimir errores -->
 <?php if (!empty($errores)) { ?>
@@ -39,14 +42,14 @@
     <label for="descripcion">Descripcion:</label><br>
     <input type="text" value='<?php echo $fila["descripcion"]; ?>' id="descripcion" name="descripcion" maxlength="100" required class="form-control" ><br><br>
     
-    <label for="fecha">Fecha:</label><br> 
-    <input type="date" value='<?php echo $fila["fecha"]; ?>' id="fecha" name="fecha" required class="form-control" ><br><br>
-    
-    <label for="hora">Hora:</label><br>
-    <input type="time"  value='<?php echo $fila["hora"]; ?>' id="hora" name="hora" class="form-control"><br><br>
-    
-    <label for="lugar">Lugar:</label><br>
-    <input type="text"  value='<?php echo $fila["lugar"]; ?>' id="lugar" name="lugar" maxlength="191" class="form-control"><br><br>
+    <input type="date" id="fecha" name="fecha" required class="form-control" 
+      value="<?= htmlspecialchars($fila['fecha'] ?? '') ?>"
+      min="<?= $fecha_min ?>" max="<?= $fecha_max ?>">
+    <input type="time" id="hora" name="hora" required class="form-control"
+      value="<?= htmlspecialchars($fila['hora'] ?? '') ?>">
+
+    <input type="text" id="lugar" name="lugar" maxlength="191" required class="form-control"
+      value="<?= htmlspecialchars($fila['lugar'] ?? '') ?>">
     
     <label for="id_genero">Género:</label><br>
      <select id="id_genero" name="id_genero" required class="form-control">

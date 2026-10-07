@@ -1,9 +1,10 @@
-</main>
+                </main>
+            </main>
         </div>    
     </div>
 
     <!-- El footer se posiciona a lo ancho completo de la pantalla -->
-    <?php include "footer.php"; ?>
+    <!--php include "footer.php"; -->
 
     <script src="/assets/DataTables/datatables.min.js"></script>
     <script>

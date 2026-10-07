@@ -2,6 +2,7 @@
 require_once "genero.php";
 $generos = getAll();
 ?>
+
 <?php include(__DIR__ . "/../../template/parciales/templateStart.php"); ?>
 
     <h1 class="mb-4">Géneros</h1>

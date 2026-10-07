@@ -23,8 +23,6 @@ while ($fila = $rs->fetch_assoc()) {
 
 <div class="d-flex flex-column flex-lg-row min-vh-100">
 
-  <?php include_once '../../template/parciales/aside1.php'; ?>
-
   <div class="flex-grow-1 p-4 bg-light">
 
     <div class="card border-0 shadow-sm p-4 bg-white">

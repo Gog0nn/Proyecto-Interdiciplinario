@@ -11,8 +11,10 @@ $rs = $tutores->getAll();
 
 $nombre = "Administrador de Tutores";
 ?>
+
 <?php include(__DIR__ . "/../../template/parciales/templateStart.php"); ?>
-    <h3>Bienvenido, elija su tutor: <?php echo $nombre; ?></h3>
+    <h1>Tutores</h1>
+    <hr class="border-2 border-success opacity-100">
 
         <?php if (isset($_GET['ok']) && $_GET['ok'] == 1) {
             echo "<span style='color: green;'>Tutor insertado correctamente.</span><br><br>";

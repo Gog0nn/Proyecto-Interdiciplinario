@@ -2,15 +2,8 @@
 <?php include(__DIR__ . "/head.php"); ?>
 <body class="d-flex flex-column vh-100 overflow-hidden">
     <?php include(__DIR__ . "/header.php"); ?>
-    <button type="button" id="sidebarToggle" class="btn btn-success btn-sm sidebar-toggle" aria-controls="appSidebar" aria-expanded="true" title="Ocultar menú">
-        <i class="bi bi-list"></i>
-        <span class="visually-hidden">Mostrar u ocultar menú</span>
-    </button>
     
     <div class="container-fluid p-0 flex-grow-1 overflow-hidden">
         <div class="row g-0 flex-nowrap h-100">
-            <!-- Inicia columna izquierda -->
-            <?php include(__DIR__ . "/aside1.php"); ?>
-            <!-- Termina columna izquierda -->
-
             <main class="col bg-white overflow-auto h-100">
+                <main class="container-fluid px-3 px-md-5 py-4">

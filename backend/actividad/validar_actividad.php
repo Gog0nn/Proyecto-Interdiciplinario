@@ -33,14 +33,24 @@ function validarActividad($data) {
         $errores[] = "La descripción no puede superar los 150 caracteres.";
     }
 
-    // 🔹 VALIDACIÓN: FECHA
+        // 🔹 VALIDACIÓN: FECHA
+    [$fecha_min, $fecha_max] = rangoFechaActividad();
     if (!campoRequerido($fecha)) {
         $errores[] = "La fecha de la actividad es obligatoria.";
+    } else {
+        $f = DateTime::createFromFormat('Y-m-d', $fecha);
+        if (!$f || $f->format('Y-m-d') !== $fecha) {
+            $errores[] = "La fecha no es válida.";
+        } elseif ($fecha < $fecha_min || $fecha > $fecha_max) {
+            $errores[] = "La fecha debe estar entre $fecha_min y $fecha_max.";
+        }
     }
 
     // 🔹 VALIDACIÓN: HORA
     if (!campoRequerido($hora)) {
         $errores[] = "La hora de la actividad es obligatoria.";
+    } elseif (!preg_match('/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/', $hora)) {
+        $errores[] = "La hora no es válida.";
     }
 
     // 🔹 VALIDACIÓN: LUGAR
@@ -72,5 +82,9 @@ function validarActividad($data) {
     }
 
     return $errores;
+}
+// Rango permitido para la fecha, definido en un solo lugar
+function rangoFechaActividad(): array {
+    return ['2020-01-01', date('Y-m-d', strtotime('+2 years'))];
 }
 ?>
