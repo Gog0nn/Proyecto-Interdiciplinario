@@ -24,7 +24,6 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link <?= set_active('/backend/jugadores/') ?>" href="/backend/jugadores/index.php">Jugadores</a></li>
                 <li class="nav-item"><a class="nav-link <?= set_active('/backend/tutores/') ?>" href="/backend/tutores/index.php">Tutores</a></li>
-                <li class="nav-item"><a class="nav-link <?= set_active('/backend/seguimiento/') ?>" href="/backend/seguimiento/index.php">Seguimiento</a></li>
                 <li class="nav-item"><a class="nav-link <?= set_active('/backend/entrenadores/') ?>" href="/backend/entrenadores/index.php">Entrenadores</a></li>
                 <li class="nav-item"><a class="nav-link <?= set_active('/backend/actividad/') ?>" href="/backend/actividad/index.php">Actividades</a></li>
             </ul>
