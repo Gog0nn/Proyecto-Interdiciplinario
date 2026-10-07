@@ -27,8 +27,7 @@ if (!$infoJugador) {
 
 // 2. Ejecutamos la consulta específica usando la función que creamos en la clase
 $rs = $seguimiento->getByJugador($id_jugador);
-?>
-
+?> 
 <?php include_once '../../template/parciales/templateStart.php'; ?>
 
 <div class="container-fluid py-4 px-3 px-lg-5">

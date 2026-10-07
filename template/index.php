@@ -1,3 +1,7 @@
+<?php
+$clase_main = 'p-0';
+include_once(__DIR__ . "/parciales/templateStart.php");
+?>
 <?php include_once(__DIR__ . "/parciales/templateStart.php"); ?>
 
 <div class="mi-fondo-basquet h-100 p-4 d-flex flex-column justify-content-start text-center">
