@@ -39,7 +39,8 @@
                     zeroRecords: 'No se encontraron registros',
                     paginate: {
                         first: 'Primero',
-                        last: 'Último',
+                        last: 'Último',    // 🔹 VALIDACIÓN: APELLIDO
+
                         next: 'Siguiente',
                         previous: 'Anterior'
                     }

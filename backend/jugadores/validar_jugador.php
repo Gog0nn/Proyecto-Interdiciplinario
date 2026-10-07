@@ -15,7 +15,6 @@ function validarJugador($data) {
     $lugar_nac       = $data['lugar_nac']       ?? '';
     $tipo_sangre     = $data['tipo_sangre']     ?? '';
     $enfermedad_base = $data['enfermedad_base'] ?? '';
-
     // 🔹 VALIDACIÓN: APELLIDO
     if (!campoRequerido($apellido)) {
         $errores[] = "El apellido es obligatorio.";
@@ -24,7 +23,6 @@ function validarJugador($data) {
     } elseif (!longitudMaxima($apellido, 100)) {
         $errores[] = "El apellido no puede superar los 100 caracteres.";
     }
-
     // 🔹 VALIDACIÓN: NOMBRE
     if (!campoRequerido($nombre)) {
         $errores[] = "El nombre es obligatorio.";
