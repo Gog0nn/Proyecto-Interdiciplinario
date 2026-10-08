@@ -1,89 +1,51 @@
 <?php
-require_once __DIR__ . "/../validaciones/helpers.php";
 
-function validarJugador($data) {
+function validarJugador($datos) {
     $errores = [];
 
-    // Capturamos los campos
-    $apellido        = $data['apellido']        ?? '';
-    $nombre          = $data['nombre']          ?? '';
-    $CI              = $data['CI']              ?? '';
-    $fecha_nac       = $data['fecha_nac']       ?? '';
-    $nro_contacto    = $data['nro_contacto']    ?? '';
-    $genero          = $data['genero']          ?? '';
-    $direccion       = $data['direccion']       ?? '';
-    $lugar_nac       = $data['lugar_nac']       ?? '';
-    $tipo_sangre     = $data['tipo_sangre']     ?? '';
-    $enfermedad_base = $data['enfermedad_base'] ?? '';
-    // 🔹 VALIDACIÓN: APELLIDO
-    if (!campoRequerido($apellido)) {
-        $errores[] = "El apellido es obligatorio.";
-    } elseif (!longitudMinima($apellido, 2)) {
-        $errores[] = "El apellido debe tener al menos 2 caracteres.";
-    } elseif (!longitudMaxima($apellido, 100)) {
-        $errores[] = "El apellido no puede superar los 100 caracteres.";
+    // 1. Validar Nombre y Apellido (Evitar números)
+    // Permite letras (incluyendo acentos/ñ) y espacios.
+    if (empty($datos['nombre']) || !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $datos['nombre'])) {
+        $errores[] = "El nombre solo debe contener letras y espacios.";
     }
-    // 🔹 VALIDACIÓN: NOMBRE
-    if (!campoRequerido($nombre)) {
-        $errores[] = "El nombre es obligatorio.";
-    } elseif (!longitudMinima($nombre, 2)) {
-        $errores[] = "El nombre debe tener al menos 2 caracteres.";
-    } elseif (!longitudMaxima($nombre, 100)) {
-        $errores[] = "El nombre no puede superar los 100 caracteres.";
+    if (empty($datos['apellido']) || !preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u", $datos['apellido'])) {
+        $errores[] = "El apellido solo debe contener letras y espacios.";
     }
 
-    // 🔹 VALIDACIÓN: CI
-    if (!campoRequerido($CI)) {
-        $errores[] = "La cédula de identidad es obligatoria.";
-    } elseif (!esEnteroPositivo($CI)) {
-        $errores[] = "La CI debe ser un número válido.";
-    } elseif (!longitudMaxima($CI, 20)) {
-        $errores[] = "La CI no puede superar los 20 caracteres.";
+    // 2. Validar CI y Teléfono/Contacto (Evitar letras y caracteres especiales)
+    // Permite únicamente números (0-9).
+    if (empty($datos['CI']) || !preg_match("/^[0-9]+$/", $datos['CI'])) {
+        $errores[] = "El número de CI solo debe contener números.";
+    }
+    if (!empty($datos['nro_contacto']) && !preg_match("/^[0-9]+$/", $datos['nro_contacto'])) {
+        $errores[] = "El número de contacto solo debe contener números.";
     }
 
-    // 🔹 VALIDACIÓN: FECHA DE NACIMIENTO
-    if (!campoRequerido($fecha_nac)) {
+    // 3. Validar Dirección (Evitar caracteres especiales a excepción de '/')
+    // Permite letras, números, espacios y la barra '/'
+    if (!empty($datos['direccion']) && !preg_match("/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\/]+$/u", $datos['direccion'])) {
+        $errores[] = "La dirección solo puede contener letras, números, espacios y el carácter '/'.";
+    }
+
+    // 4. Validar Fecha de nacimiento (Evitar fechas futuras y edad fuera del rango 5-80 años)
+    if (empty($datos['fecha_nac'])) {
         $errores[] = "La fecha de nacimiento es obligatoria.";
     } else {
-        $d = DateTime::createFromFormat('Y-m-d', $fecha_nac);
-        if (!$d || $d->format('Y-m-d') !== $fecha_nac) {
-            $errores[] = "La fecha de nacimiento no tiene un formato válido.";
-        } elseif ($d > new DateTime()) {
-            $errores[] = "La fecha de nacimiento no puede ser una fecha futura.";
+        $fechaNac = DateTime::createFromFormat('Y-m-d', $datos['fecha_nac']);
+        $hoy = new DateTime();
+
+        if (!$fechaNac || $fechaNac->format('Y-m-d') !== $datos['fecha_nac']) {
+            $errores[] = "El formato de la fecha de nacimiento no es válido.";
+        } elseif ($fechaNac > $hoy) {
+            $errores[] = "La fecha de nacimiento no puede ser en el futuro.";
+        } else {
+            // Cálculo de edad
+            $edad = $hoy->diff($fechaNac)->y;
+            if ($edad < 5 || $edad > 80) {
+                $errores[] = "La edad debe estar comprendida entre 5 y 80 años (Edad calculada: {$edad} años).";
+            }
         }
     }
 
-    // 🔹 VALIDACIÓN: NRO. CONTACTO (opcional pero con formato si se ingresa)
-    if (campoRequerido($nro_contacto) && !longitudMaxima($nro_contacto, 50)) {
-        $errores[] = "El número de contacto no puede superar los 50 caracteres.";
-    }
-
-    // 🔹 VALIDACIÓN: GÉNERO
-    if (!campoRequerido($genero)) {
-        $errores[] = "Debe seleccionar un género.";
-    } elseif (!esEnteroPositivo($genero) || !in_array((int)$genero, [1, 2, 3])) {
-        $errores[] = "El género seleccionado no es válido.";
-    }
-
-    // 🔹 VALIDACIÓN: DIRECCIÓN (opcional pero con límite)
-    if (campoRequerido($direccion) && !longitudMaxima($direccion, 191)) {
-        $errores[] = "La dirección no puede superar los 191 caracteres.";
-    }
-
-    // 🔹 VALIDACIÓN: LUGAR DE NACIMIENTO (opcional pero con límite)
-    if (campoRequerido($lugar_nac) && !longitudMaxima($lugar_nac, 100)) {
-        $errores[] = "El lugar de nacimiento no puede superar los 100 caracteres.";
-    }
-
-    // 🔹 VALIDACIÓN: TIPO DE SANGRE (opcional pero debe ser valor válido si se ingresa)
-    $tipos_validos = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-    if (campoRequerido($tipo_sangre) && !in_array($tipo_sangre, $tipos_validos)) {
-        $errores[] = "El tipo de sangre seleccionado no es válido.";
-    }
-
-    // 🔹 VALIDACIÓN: ENFERMEDAD BASE (opcional pero con límite)
-   
-
     return $errores;
 }
-?>

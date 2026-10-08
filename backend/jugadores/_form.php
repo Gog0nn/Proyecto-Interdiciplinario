@@ -1,3 +1,7 @@
+<?php
+// Cálculo de límites para la fecha de nacimiento (entre 5 y 80 años)
+$hace80Anos = date('Y-m-d', strtotime('-80 years'));$hace5Anos  = date('Y-m-d', strtotime('-5 years'));
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,25 +13,23 @@
   <?php if (!empty($errores)) { ?>
     <div class="alert alert-danger">
         <ul class="mb-0">
-            <?php foreach ($errores as $error) { ?>
+            <?php foreach ($errores as$error) { ?>
                 <li><?php echo htmlspecialchars($error); ?></li>
             <?php } ?>
         </ul>
     </div>
   <?php } ?>
   <?php
-  if (isset($_GET['error']) && $_GET['error'] == 1) {
+  if (isset($_GET['error']) &&$_GET['error'] == 1) {
       echo "<p style='color:red;'>Error al insertar datos del jugador.</p>";
   }
-  if (isset($_GET['error']) && $_GET['error'] == 2) {
+  if (isset($_GET['error']) &&$_GET['error'] == 2) {
       echo "<p style='color:red;'>Error al actualizar el jugador.</p>";
   }
-  if (!isset($target)) {
-      $target = "guardar.php";
+  if (!isset($target)) {$target = "guardar.php";
   }
-  // Si $fila no está definida, inicializamos vacía para evitar errores
-  if (!isset($fila)) {
-      $fila = [
+  // Si $fila no está definida, la inicializamos vacía para evitar errores
+  if (!isset($fila)) {$fila = [
           'id_jugador'      => '',
           'apellido'        => '',
           'nombre'          => '',
@@ -49,25 +51,34 @@
 
     <input type="hidden" name="id_jugador" value="<?php echo $fila['id_jugador']; ?>">
 
+    <!-- Validaciones en Apellido y Nombre: Evita números -->
     <label for="apellido">Apellido:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['apellido']); ?>"
-           id="apellido" name="apellido" maxlength="100" required class="form-control"><br><br>
+           id="apellido" name="apellido" maxlength="100" required class="form-control"
+           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="El apellido solo debe contener letras y espacios"><br><br>
 
     <label for="nombre">Nombre:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['nombre']); ?>"
-           id="nombre" name="nombre" maxlength="100" required class="form-control"><br><br>
+           id="nombre" name="nombre" maxlength="100" required class="form-control"
+           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="El nombre solo debe contener letras y espacios"><br><br>
 
+    <!-- Validaciones en CI y Contacto: Evita letras y caracteres especiales -->
     <label for="CI">CI:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['CI']); ?>"
-           id="CI" name="CI" maxlength="20" required class="form-control"><br><br>
+           id="CI" name="CI" maxlength="20" required class="form-control"
+           pattern="[0-9]+" title="El número de Cédula solo debe contener números"><br><br>
 
+    <!-- Validación de Fecha de nacimiento: Rango de 5 a 80 años -->
     <label for="fecha_nac">Fecha de nacimiento:</label><br>
     <input type="date" value="<?php echo $fila['fecha_nac']; ?>"
-           id="fecha_nac" name="fecha_nac" required class="form-control"><br><br>
+           id="fecha_nac" name="fecha_nac" required class="form-control"
+           min="<?php echo $hace80Anos; ?>" max="<?php echo $hace5Anos; ?>"
+           title="La edad debe estar entre 5 y 80 años"><br><br>
 
     <label for="nro_contacto">Nro. de contacto:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['nro_contacto']); ?>"
-           id="nro_contacto" name="nro_contacto" maxlength="50" class="form-control"><br><br>
+           id="nro_contacto" name="nro_contacto" maxlength="50" class="form-control"
+           pattern="[0-9]+" title="El número de contacto solo debe contener números"><br><br>
 
     <label for="genero">Género:</label><br>
     <select id="genero" name="genero" required class="form-control">
@@ -77,9 +88,11 @@
       <option value="3" <?php echo ($fila['genero'] == 3) ? 'selected' : ''; ?>>Mixto</option>
     </select><br><br>
 
+    <!-- Validación de Dirección: Solo letras, números, espacios y la barra '/' -->
     <label for="direccion">Dirección:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['direccion']); ?>"
-           id="direccion" name="direccion" maxlength="191" class="form-control"><br><br>
+           id="direccion" name="direccion" maxlength="191" class="form-control"
+           pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\/]+" title="La dirección solo admite letras, números, espacios y '/'"><br><br>
 
     <label for="lugar_nac">Lugar de nacimiento:</label><br>
     <input type="text" value="<?php echo htmlspecialchars($fila['lugar_nac']); ?>"
@@ -89,7 +102,7 @@
     <select id="tipo_sangre" name="tipo_sangre" class="form-control">
       <option value="">-- Seleccionar --</option>
       <?php foreach (['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $tipo) { ?>
-        <option value="<?php echo $tipo; ?>" <?php echo ($fila['tipo_sangre'] == $tipo) ? 'selected' : ''; ?>>
+        <option value="<?php echo $tipo; ?>" <?php echo ($fila['tipo_sangre'] ==$tipo) ? 'selected' : ''; ?>>
           <?php echo $tipo; ?>
         </option>
       <?php } ?>
@@ -164,13 +177,34 @@
           <div class="modal-body">
             <div id="nuevo_tutor_error" class="alert alert-danger d-none"></div>
             <div class="row g-3">
-              <div class="col-md-6"><label class="form-label" for="nuevo_tutor_nombre">Nombre</label><input class="form-control" id="nuevo_tutor_nombre" required></div>
-              <div class="col-md-6"><label class="form-label" for="nuevo_tutor_apellido">Apellido</label><input class="form-control" id="nuevo_tutor_apellido" required></div>
-              <div class="col-12"><label class="form-label" for="nuevo_tutor_contacto">Teléfono</label><input class="form-control" id="nuevo_tutor_contacto" required></div>
-              <div class="col-md-7"><label class="form-label" for="nuevo_tutor_parentesco">Parentesco</label><select class="form-select" id="nuevo_tutor_parentesco"><option>Padre</option><option>Madre</option><option selected>Tutor Legal</option><option>Abuelo/a</option><option>Otro</option></select></div>
+              <div class="col-md-6">
+                <label class="form-label" for="nuevo_tutor_nombre">Nombre</label>
+                <input class="form-control" id="nuevo_tutor_nombre" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="nuevo_tutor_apellido">Apellido</label>
+                <input class="form-control" id="nuevo_tutor_apellido" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+">
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="nuevo_tutor_contacto">Teléfono</label>
+                <input class="form-control" id="nuevo_tutor_contacto" required pattern="[0-9]+">
+              </div>
+              <div class="col-md-7">
+                <label class="form-label" for="nuevo_tutor_parentesco">Parentesco</label>
+                <select class="form-select" id="nuevo_tutor_parentesco">
+                  <option>Padre</option>
+                  <option>Madre</option>
+                  <option selected>Tutor Legal</option>
+                  <option>Abuelo/a</option>
+                  <option>Otro</option>
+                </select>
+              </div>
             </div>
           </div>
-          <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" id="guardar_nuevo_tutor" class="btn btn-primary">Guardar y asignar</button></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" id="guardar_nuevo_tutor" class="btn btn-primary">Guardar y asignar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -240,3 +274,5 @@
       renderizar();
     })();
   </script>
+</body>
+</html>
