@@ -234,14 +234,21 @@ $hace80Anos = date('Y-m-d', strtotime('-80 years'));$hace5Anos  = date('Y-m-d', 
         sincronizar();
       };
       const seleccionar = (tutor) => { tutorActual = tutor; nombreSeleccionado.textContent = `${tutor.apellido}, ${tutor.nombre} (${tutor.contacto || 'sin teléfono'})`; seleccionado.classList.remove('d-none'); };
-      const buscar = async () => {
-        const termino = busqueda.value.trim();
-        resultados.innerHTML = '';
-        if (termino.length < 3) return;
-        const respuesta = await fetch(`../tutores/buscar.php?q=${encodeURIComponent(termino)}`);
-        const tutores = await respuesta.json();
-        resultados.innerHTML = tutores.length ? tutores.map((tutor) => `<button type="button" class="list-group-item list-group-item-action resultado-tutor" data-tutor='${JSON.stringify(tutor).replace(/'/g, '&#039;')}'>${escapeHtml(tutor.apellido)}, ${escapeHtml(tutor.nombre)} · ${escapeHtml(tutor.contacto || '')}</button>`).join('') : '<div class="list-group-item text-muted">No se encontraron tutores.</div>';
-      };
+const buscar = async () => {
+  const termino = busqueda.value.trim();
+  resultados.innerHTML = '';
+  if (termino.length < 3) return;
+  try {
+    const respuesta = await fetch(`../tutores/buscar.php?q=${encodeURIComponent(termino)}`);
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    const tutores = await respuesta.json();
+    if (!Array.isArray(tutores)) throw new Error(tutores.error || 'Respuesta inesperada');
+    resultados.innerHTML = tutores.length ? tutores.map((tutor) => `<button type="button" class="list-group-item list-group-item-action resultado-tutor" data-tutor='${JSON.stringify(tutor).replace(/'/g, '&#039;')}'>${escapeHtml(tutor.apellido)}, ${escapeHtml(tutor.nombre)} · ${escapeHtml(tutor.contacto || '')}</button>`).join('') : '<div class="list-group-item text-muted">No se encontraron tutores.</div>';
+  } catch (e) {
+    console.error('Búsqueda de tutores:', e);
+    resultados.innerHTML = `<div class="list-group-item text-danger">Error al buscar: ${escapeHtml(e.message)}</div>`;
+  }
+};
       busqueda.addEventListener('input', () => { clearTimeout(temporizador); temporizador = setTimeout(buscar, 250); });
       resultados.addEventListener('click', (event) => { const boton = event.target.closest('.resultado-tutor'); if (boton) seleccionar(JSON.parse(boton.dataset.tutor)); });
       document.getElementById('limpiar_busqueda_tutor').addEventListener('click', () => { busqueda.value = ''; resultados.innerHTML = ''; seleccionado.classList.add('d-none'); tutorActual = null; });

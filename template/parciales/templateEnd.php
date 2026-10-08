@@ -19,12 +19,11 @@
                 sidebarToggle.querySelector('i').className = 'bi bi-list';
             });
         }
- 
+
         document.querySelectorAll('table[data-datatable]').forEach((table) => {
-            const disabledColumns = (table.dataset.datatableNoOrder || '')
-                .split(',')
-                .filter(Boolean)
-                .map(Number);
+            const columnas = (valor) => (valor || '').split(',').filter(Boolean).map(Number);
+            const sinOrden = columnas(table.dataset.datatableNoOrder);
+            const sinBusqueda = columnas(table.dataset.datatableNoSearch);
 
             new DataTable(table, {
                 pageLength: 10,
@@ -39,17 +38,15 @@
                     zeroRecords: 'No se encontraron registros',
                     paginate: {
                         first: 'Primero',
-                        last: 'Último',    // 🔹 VALIDACIÓN: APELLIDO
-
+                        last: 'Último',
                         next: 'Siguiente',
                         previous: 'Anterior'
                     }
                 },
-                columnDefs: disabledColumns.map((target) => ({
-                    target,
-                    orderable: false,
-                    searchable: false
-                }))
+                columnDefs: [
+                    ...(sinOrden.length ? [{ target: sinOrden, orderable: false }] : []),
+                    ...(sinBusqueda.length ? [{ target: sinBusqueda, searchable: false }] : [])
+                ]
             });
         });
     </script>

@@ -30,11 +30,13 @@ function validarTutor($data) {
         $errores[] = "El nombre solo puede contener letras";
     }
 
-    // CONTACTO
+    // CONTACTO (Se agregan validaciones para exigir solo dígitos)
     if (!campoRequerido($contacto)) {
         $errores[] = "El contacto es obligatorio";
     } elseif (!longitudMaxima($contacto, 50)) {
         $errores[] = "El contacto no puede superar 50 caracteres";
+    } elseif (function_exists('soloNumeros') ? !soloNumeros($contacto) : !preg_match('/^[0-9]+$/', $contacto)) {
+        $errores[] = "El contacto solo debe contener números (sin letras ni caracteres especiales)";
     }
 
     return $errores;

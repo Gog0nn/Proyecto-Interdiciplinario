@@ -18,7 +18,7 @@ try {
         $respuesta[] = $tutor;
     }
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
-} catch (Throwable $error) {
+}catch (Throwable $error) {
     http_response_code(500);
-    echo json_encode(['error' => 'No se pudo buscar tutores.']);
+    echo json_encode(['error' => $error->getMessage()]);
 }
