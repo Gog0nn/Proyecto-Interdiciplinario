@@ -43,6 +43,7 @@ function validarEntrenador($data) {
             $errores[] = "La fecha de nacimiento debe ser anterior a hoy";
         }
     }
+    
 
     // NRO CONTACTO
     if (!campoRequerido($nro_contacto)) {
