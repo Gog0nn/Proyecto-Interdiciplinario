@@ -41,7 +41,8 @@ $nombre = "Administrador de Tutores";
                         <th>Contacto</th>
                         <th>Jugadores Asignados</th>
                         <th colspan="2" class="text-center">
-                            <a href="nuevo.php" class="btn btn-outline-success btn-sm">Nuevo Tutor</a>
+                            <a href="nuevo.php" class="btn btn-outline-success btn-sm">
+                      <i class="bi bi-person-plus me-1"></i> Nuevo Tutor</a>
                         </th>
                     </tr>
                 </thead>
@@ -75,8 +76,8 @@ $nombre = "Administrador de Tutores";
                             <span class="text-muted">Sin jugadores</span>
                         <?php endif; ?>
                     </td>
-                    <td><a href="editar.php?id_tutor=<?php echo $fila['id_tutor']; ?>" class="btn btn-outline-warning btn-sm">Editar</a></td>
-                    <td><a href="borrar.php?id_tutor=<?php echo $fila['id_tutor']; ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Seguro que quieres borrar este tutor?');">Borrar</a></td>
+                    <td class="text-center"><a href="editar.php?id_tutor=<?php echo $fila['id_tutor']; ?>" class="btn btn-outline-warning py-1 px-2"><i class="bi bi-pencil-square"></i> Editar</a></td>
+                    <td class="text-center"><a href="borrar.php?id_tutor=<?php echo $fila['id_tutor']; ?>"  onclick="return confirm('¿Seguro que quieres borrar este tutor?');"class="btn btn-outline-danger py-1 px-2"><i class="bi bi-trash"></i> Borrar</a></td>
                 </tr>
                 <?php
                 }

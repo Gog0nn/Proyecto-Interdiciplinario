@@ -10,10 +10,6 @@ $errores = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errores = validarTutor($_POST);
 
-    // Validar que tenga al menos un jugador asignado
-    if (empty($_POST['jugador_ids']) || !is_array($_POST['jugador_ids']) || count($_POST['jugador_ids']) === 0) {
-        $errores[] = "Debe asignar al menos un jugador al tutor";
-    }
 
     if (!empty($errores)) {
         $fila = $_POST;

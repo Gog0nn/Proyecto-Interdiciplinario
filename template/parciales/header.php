@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #004d12 !important;">
     <div class="container-fluid">
-        <img src="/template/img/image.png" alt="Logo" width="60" height="60" class="d-inline-block align-text-top me-2">
+        <img src="/template/img/logo.jpeg" alt="Logo" width="80" height="60" class="d-inline-block align-text-top me-2">
         <a class="navbar-brand fw-bold text-uppercase" href="/template/index.php" style="font-size: 1.3rem; letter-spacing: 0.5px;">Club Atletico Sacachispas</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

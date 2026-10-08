@@ -17,47 +17,46 @@
 
 <?php
 require_once __DIR__ . "/../../db/lib/jugadores.php";
-$jugadoresObj = new jugadores($db);
+$con = Conex();
+$jugadoresObj = new jugadores($con);
 $jugadoresRs = $jugadoresObj->getALL();
 ?>
 
-<form action="<?php echo $target; ?>" method="post" class="needs-validation" novalidate>
-    <input type="hidden" name="id_tutor" value="<?php echo $fila['id_tutor'] ?? ''; ?>">
-    <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input type="text" id="nombre" name="nombre" maxlength="100"
-            class="form-control" value="<?php echo $fila['nombre'] ?? ''; ?>" required>
+<div class="d-flex justify-content-center w-100 my-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 800px; width: 100%;">
+        <div class="card-body">
+            <form action="<?php echo $target; ?>" method="post" class="needs-validation" novalidate>
+                <input type="hidden" name="id_tutor" value="<?php echo $fila['id_tutor'] ?? ''; ?>">
+                
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" maxlength="100"
+                            class="form-control" value="<?php echo htmlspecialchars($fila['nombre'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" maxlength="100"
+                            class="form-control" value="<?php echo htmlspecialchars($fila['apellido'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="contacto" class="form-label">Contacto</label>
+                        <input type="text" id="contacto" name="contacto" maxlength="100"
+                            class="form-control" value="<?php echo htmlspecialchars($fila['contacto'] ?? ''); ?>" required>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-floppy"></i> Guardar Tutor
+                        </button>
+                        <a href="index.php" class="btn btn-outline-secondary">Volver</a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="apellido" class="form-label">Apellido</label>
-        <input type="text" id="apellido" name="apellido" maxlength="100"
-            class="form-control" value="<?php echo $fila['apellido'] ?? ''; ?>" required>
-    </div>
-    <div class="mb-3">
-        <label for="contacto" class="form-label">Contacto</label>
-        <input type="text" id="contacto" name="contacto" maxlength="100"
-            class="form-control" value="<?php echo $fila['contacto'] ?? ''; ?>" required>
-    </div>
-    <div class="mb-3">
-        <label for="jugador_ids" class="form-label">Asignar Jugador(es) <span class="text-danger">*</span></label>
-        <select id="jugador_ids" name="jugador_ids[]" class="form-select" multiple required>
-            <?php
-            if ($jugadoresRs) {
-                $jugador_ids = isset($fila['jugador_ids']) && $fila['jugador_ids'] ?
-                    explode(',', $fila['jugador_ids']) : [];
-                while ($jugador = $jugadoresRs->fetch_assoc()) {
-                    $selected = in_array($jugador['id_jugador'], $jugador_ids) ? 'selected' : '';
-                    echo "<option value='{$jugador['id_jugador']}' $selected>";
-                    echo htmlspecialchars($jugador['apellido'] . ", " . $jugador['nombre']);
-                    echo "</option>";
-                }
-            }
-            ?>
-        </select>
-        <small class="form-text text-muted">Selecciona al menos un jugador. Usa Ctrl+Click para múltiples.</small>
-    </div>
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Guardar Tutor</button>
-        <a href="index.php" class="btn btn-outline-secondary">Volver</a>
-    </div>
-</form>
+</div>
