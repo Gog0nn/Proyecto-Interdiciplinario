@@ -105,11 +105,13 @@ while ($fila = $rs->fetch_assoc()) {
                   <th>Fecha nac.</th>
                   <th>Edad</th>
                   <th>Contacto</th>
-                  <th>Seguimiento del jugador</th>
                   <th class="text-center">Disponible  </th>
                   <th class="text-center"><a href="nuevo.php" class="btn btn-outline-success btn-sm">
                       <i class="bi bi-person-plus me-1"></i> Nuevo jugador</th>
+                                        <th>Seguimiento del jugador</th>
+
               </thead>
+
               <tbody>
                 <?php foreach ($jugadores as $fila): ?>
                   <tr>
@@ -147,11 +149,7 @@ while ($fila = $rs->fetch_assoc()) {
                     <td class="text-nowrap"><?= $fila['fecha_nac'] ?></td>
                     <td class="fw-bold"><?= $fila['edad'] ?></td>
                     <td><?= htmlspecialchars($fila['nro_contacto']) ?></td>
-                    <td>
-                      <a href="../seguimiento/index.php?id_jugador=<?= $fila['id_jugador'] ?>" class="btn btn-outline-info py-1 px-2">
-                        <i class="bi bi-binoculars"></i> Ver Seguimiento
-                      </a>
-                    </td>
+                  
                     <td>
                       <div class="text-center">
                         <?php if (($fila['activo'] ?? 1) == 1): ?>
@@ -172,6 +170,11 @@ while ($fila = $rs->fetch_assoc()) {
                         <a href="borrar.php?id_jugador=<?= $fila['id_jugador'] ?>"
                           class="btn btn-outline-danger py-1 px-2"><i class="bi bi-trash"></i> Borrar</a>
                       </div>
+                      <td>
+                      <a href="../seguimiento/index.php?id_jugador=<?= $fila['id_jugador'] ?>" class="btn btn-outline-info py-1 px-2">
+                        <i class="bi bi-binoculars"></i> Ver Seguimiento
+                      </a>
+                    </td>
                     </td>
                     </td>
                     </td>
