@@ -70,6 +70,9 @@ function validarJugador($data) {
     if (campoRequerido($nro_contacto) && !longitudMaxima($nro_contacto, 50)) {
         $errores[] = "El número de contacto no puede superar 50 caracteres";
     }
+    if(EsNumero($nro_contacto) === false){
+        $errores[] = "El número de contacto solo puede contener números";
+    }
 
     // DIRECCIÓN (opcional pero con límite)
     if (campoRequerido($direccion) && !longitudMaxima($direccion, 150)) {
