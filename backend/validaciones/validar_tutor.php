@@ -36,6 +36,9 @@ function validarTutor($data) {
     } elseif (!longitudMaxima($contacto, 50)) {
         $errores[] = "El contacto no puede superar 50 caracteres";
     }
+    if(esNumero($contacto) === false){
+        $errores[] = "El contacto solo puede contener números";
+    }
 
     return $errores;
 }

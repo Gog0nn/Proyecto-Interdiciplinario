@@ -45,7 +45,7 @@ $jugadoresRs = $jugadoresObj->getALL();
                     <div class="col-12">
                         <label for="contacto" class="form-label">Contacto</label>
                         <input type="text" id="contacto" name="contacto" maxlength="100"
-                            class="form-control" value="<?php echo htmlspecialchars($fila['contacto'] ?? ''); ?>" required>
+                            class="form-control" value="<?php echo htmlspecialchars($fila['contacto'] ?? ''); ?>" placeholder="981123456" required>
                     </div>
 
                     <div class="col-12 d-flex gap-2 mt-3">
