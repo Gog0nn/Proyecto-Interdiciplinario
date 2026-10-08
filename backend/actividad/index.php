@@ -73,7 +73,8 @@ $rs = $evento->getFiltered($id_categoria, $id_tipo);//Traemos el resultado de la
     <th>Genero</th>
     <th>Categoria</th>
     <th>Tipo</th>
-    <th colspan="2"><a href="nuevo.php" class="btn btn-outline-primary">Nueva actividad</a></th>
+    <th colspan="2"><a href="nuevo.php" class="btn btn-outline-success btn-sm">
+                      <i class="bi bi-person-plus me-1"></i> Nueva actividad</a></th>
 
 </tr>
 </thead>
@@ -132,8 +133,8 @@ while ($fila= $rs->fetch_assoc()) //loop while que se ejecuta mientras haya fila
     }
     ?>
     </td>
-    <td ><a href="editar.php?id_actividad=<?php echo $fila["id_actividad"]; ?>" class="btn btn-outline-warning">Editar</a></td>
-    <td ><a href="borrar.php?id_actividad=<?php echo $fila["id_actividad"]; ?>" class="btn btn-outline-danger">Borrar</a></td>
+    <td ><a href="editar.php?id_actividad=<?php echo $fila["id_actividad"]; ?>" class="btn btn-outline-warning py-1 px-2"><i class="bi bi-pencil-square"></i> Editar</a></td>
+    <td ><a href="borrar.php?id_actividad=<?php echo $fila["id_actividad"]; ?>" class="btn btn-outline-danger py-1 px-2"><i class="bi bi-trash"></i> Borrar</a></td>
 </tr>
 
 

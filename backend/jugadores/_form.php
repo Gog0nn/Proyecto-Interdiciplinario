@@ -5,9 +5,7 @@
   <title>Formulario de Jugador</title>
 </head>
 <body>
-
   <h2><?php echo $titulo_form; ?></h2>
-
   <?php if (!empty($errores)) { ?>
     <div class="alert alert-danger">
         <ul class="mb-0">
@@ -17,7 +15,6 @@
         </ul>
     </div>
   <?php } ?>
-
   <?php
   if (isset($_GET['error']) && $_GET['error'] == 1) {
       echo "<p style='color:red;'>Error al insertar datos del jugador.</p>";

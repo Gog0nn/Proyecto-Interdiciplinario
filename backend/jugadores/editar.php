@@ -59,10 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $tutores->guardarRelaciones($id, $relaciones);
         $con->commit();
-    } catch (Throwable $error) {
+    }catch (Throwable $error) {
         $con->rollback();
-        error_log('Edición de jugador ' . $id . ': ' . $error->getMessage());
-        header('Location: editar.php?id_jugador=' . $id . '&error=guardar');
+        echo '<div style="background:#f8d7da; color:#842029; padding:20px; margin:20px; border-radius:8px; font-family:monospace; border:1px solid #f5c2c7;">';
+        echo '<h3 style="margin-top:0;">❌ Error detectado al guardar</h3>';
+        echo '<p><strong>Mensaje:</strong> ' . htmlspecialchars($error->getMessage()) . '</p>';
+        echo '<p><strong>Archivo:</strong> ' . htmlspecialchars($error->getFile()) . ' (Línea ' . $error->getLine() . ')</p>';
+        echo '</div>';
         exit;
     }
 
@@ -106,102 +109,117 @@ while ($row = $result->fetch_assoc()) {
     </div>
 <?php endif; ?>
 
-<div class="card" style="max-width: 600px;">
-    <div class="card-body">
-        <!-- 'novalidate' evita el choque de HTML5 con inputs ocultos -->
-        <form method="POST" enctype="multipart/form-data" novalidate>
-            <div class="row g-3">
+<div class="d-flex justify-content-center w-100 my-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 900px; width: 100%;">
+        <div class="card-body">
+            <!-- 'novalidate' evita el choque de HTML5 con inputs ocultos -->
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                <div class="row g-3">
 
-                <div class="col-6">
-                    <label class="form-label">Apellido</label>
-                    <input type="text" name="apellido" class="form-control"
-                           value="<?= htmlspecialchars($fila['apellido'] ?? '') ?>" required>
+                    <div class="col-6">
+                        <label class="form-label">Apellido</label>
+                        <input type="text" name="apellido" class="form-control"
+                               value="<?= htmlspecialchars($fila['apellido'] ?? '') ?>" required>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control"
+                               value="<?= htmlspecialchars($fila['nombre'] ?? '') ?>" required>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">CI</label>
+                        <input type="text" name="CI" class="form-control"
+                               value="<?= htmlspecialchars($fila['CI'] ?? '') ?>" required>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Fecha de nacimiento</label>
+                        <input type="date" name="fecha_nac" class="form-control"
+                               value="<?= htmlspecialchars($fila['fecha_nac'] ?? '') ?>" required>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Nro. contacto</label>
+                        <input type="text" name="nro_contacto" class="form-control"
+                               value="<?= htmlspecialchars($fila['nro_contacto'] ?? '') ?>">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Género</label>
+                        <select name="genero" class="form-select" required>
+                            <option value="1" <?= ($fila['genero'] ?? 0) == 1 ? 'selected' : '' ?>>Masculino</option>
+                            <option value="2" <?= ($fila['genero'] ?? 0) == 2 ? 'selected' : '' ?>>Femenino</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" name="direccion" class="form-control"
+                               value="<?= htmlspecialchars($fila['direccion'] ?? '') ?>">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Lugar de nacimiento</label>
+                        <input type="text" name="lugar_nac" class="form-control"
+                               value="<?= htmlspecialchars($fila['lugar_nac'] ?? '') ?>">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Tipo de sangre</label>
+                        <select name="tipo_sangre" class="form-select">
+                            <option value="">— Sin especificar —</option>
+                            <?php foreach (['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $ts): ?>
+                                <option value="<?= $ts ?>" <?= ($fila['tipo_sangre'] ?? '') === $ts ? 'selected' : '' ?>>
+                                    <?= $ts ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Alergias</label>
+                        <input type="text" name="alergias" class="form-control"
+                               value="<?= htmlspecialchars($fila['alergias'] ?? '') ?>">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label">Enfermedades Base</label>
+                        <input type="text" name="enfermedades_base" class="form-control"
+                               value="<?= htmlspecialchars($fila['enfermedades_base'] ?? '') ?>">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label d-block">Foto del Jugador</label>
+                        
+                        <?php if (!empty($fila['foto'])): ?>
+                            <div class="mb-2 d-flex align-items-center gap-3">
+                                <img src="data:image/jpeg;base64,<?= base64_encode($fila['foto']) ?>" 
+                                     alt="Foto actual" 
+                                     class="img-thumbnail" 
+                                     style="width: 80px; height: 80px; object-fit: cover;">
+                                <span class="text-muted small">
+                                    <i class="bi bi-info-circle"></i> Foto actual. Selecciona una nueva solo si deseas cambiarla.
+                                </span>
+                            </div>
+                        <?php endif; ?>
+
+                        <input type="file" name="foto" class="form-control" accept="image/*">
+                    </div>
+
+                    <?php include __DIR__ . '/_tutores_edicion.php'; ?>
+
+                    <div class="col-12 d-flex gap-2 mt-2">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-floppy"></i> Guardar cambios
+                        </button>
+                        <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+
                 </div>
-
-                <div class="col-6">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control"
-                           value="<?= htmlspecialchars($fila['nombre'] ?? '') ?>" required>
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">CI</label>
-                    <input type="text" name="CI" class="form-control"
-                           value="<?= htmlspecialchars($fila['CI'] ?? '') ?>" required>
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Fecha de nacimiento</label>
-                    <input type="date" name="fecha_nac" class="form-control"
-                           value="<?= htmlspecialchars($fila['fecha_nac'] ?? '') ?>" required>
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Nro. contacto</label>
-                    <input type="text" name="nro_contacto" class="form-control"
-                           value="<?= htmlspecialchars($fila['nro_contacto'] ?? '') ?>">
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Género</label>
-                    <select name="genero" class="form-select" required>
-                        <option value="1" <?= ($fila['genero'] ?? 0) == 1 ? 'selected' : '' ?>>Masculino</option>
-                        <option value="2" <?= ($fila['genero'] ?? 0) == 2 ? 'selected' : '' ?>>Femenino</option>
-                    </select>
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label">Dirección</label>
-                    <input type="text" name="direccion" class="form-control"
-                           value="<?= htmlspecialchars($fila['direccion'] ?? '') ?>">
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Lugar de nacimiento</label>
-                    <input type="text" name="lugar_nac" class="form-control"
-                           value="<?= htmlspecialchars($fila['lugar_nac'] ?? '') ?>">
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Tipo de sangre</label>
-                    <select name="tipo_sangre" class="form-select">
-                        <option value="">— Sin especificar —</option>
-                        <?php foreach (['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $ts): ?>
-                            <option value="<?= $ts ?>" <?= ($fila['tipo_sangre'] ?? '') === $ts ? 'selected' : '' ?>>
-                                <?= $ts ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Alergias</label>
-                    <input type="text" name="alergias" class="form-control"
-                           value="<?= htmlspecialchars($fila['alergias'] ?? '') ?>">
-                </div>
-
-                <div class="col-6">
-                    <label class="form-label">Enfermedades Base</label>
-                    <input type="text" name="enfermedades_base" class="form-control"
-                           value="<?= htmlspecialchars($fila['enfermedades_base'] ?? '') ?>">
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label">Foto del Jugador</label>
-                    <input type="file" name="foto" class="form-control" accept="image/*">
-                </div>
-
-                <?php include __DIR__ . '/_tutores_edicion.php'; ?>
-
-                <div class="col-12 d-flex gap-2 mt-2">
-                    <button type="submit" class="btn btn-warning">
-                        <i class="bi bi-floppy"></i> Guardar cambios
-                    </button>
-                    <a href="index.php" class="btn btn-outline-secondary">Cancelar</a>
-                </div>
-
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 

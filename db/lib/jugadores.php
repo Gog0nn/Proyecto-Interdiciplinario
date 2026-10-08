@@ -4,7 +4,7 @@ class jugadores {
     private $db;
 
     public function __construct($conn) {
-        $this->db = $conn;
+        $this->db =$conn;
     }
 
     public function getALL() {
@@ -26,38 +26,36 @@ class jugadores {
         return $this->db->query($sql);
     }
 
-    public function insert($datos) {
-        $sql = "INSERT INTO `Jugadores` 
+    public function insert($datos) {$sql = "INSERT INTO `Jugadores` 
                 (`apellido`, `nombre`, `CI`, `fecha_nac`, `nro_contacto`, `genero`, `activo`, `direccion`, `lugar_nac`, `foto`, `tipo_sangre`, `alergias`, `enfermedades_base`) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->db->prepare($sql);
-        $foto = $datos['foto'] ?? null;
+        $foto =$datos['foto'] ?? null;
+        $null = null; // Variable auxiliar para el parametro BLOB
+
         $stmt->bind_param("sssssiissbsss", 
             $datos['apellido'], 
-            $datos['nombre'], 
-            $datos['CI'], 
-            $datos['fecha_nac'], 
-            $datos['nro_contacto'], 
-            $datos['genero'], 
-            $datos['activo'], 
-            $datos['direccion'], 
-            $datos['lugar_nac'], 
-            $foto,
-            $datos['tipo_sangre'], 
-            $datos['alergias'], 
-            $datos['enfermedades_base']
+            $datos['nombre'],$datos['CI'], 
+            $datos['fecha_nac'],$datos['nro_contacto'], 
+            $datos['genero'],$datos['activo'], 
+            $datos['direccion'],$datos['lugar_nac'], 
+            $null,$datos['tipo_sangre'], 
+            $datos['alergias'],$datos['enfermedades_base']
         );
+
         if ($foto !== null) {
-            $stmt->send_long_data(9, $foto);
+            $stmt->send_long_data(9,$foto);
         }
+
         return $stmt->execute();
     }
 
     public function update($datos) {
-        $foto = $datos['foto'] ?? null;
-        $incluye_foto = $foto !== null;
-        $foto_sql = $incluye_foto ? ', `foto` = ?' : '';
+        $foto =$datos['foto'] ?? null;
+        $incluye_foto =$foto !== null;
+        $foto_sql =$incluye_foto ? ', `foto` = ?' : '';
+        
         $sql = "UPDATE `Jugadores` SET
                 `apellido` = ?, `nombre` = ?, `CI` = ?, `fecha_nac` = ?,
                 `nro_contacto` = ?, `genero` = ?, `direccion` = ?,
@@ -66,12 +64,35 @@ class jugadores {
                 WHERE `id_jugador` = ?";
 
         $stmt = $this->db->prepare($sql);
-        if ($incluye_foto) {
-            $stmt->bind_param("sssssisssssbi", $datos['apellido'], $datos['nombre'], $datos['CI'], $datos['fecha_nac'], $datos['nro_contacto'], $datos['genero'], $datos['direccion'], $datos['lugar_nac'], $datos['tipo_sangre'], $datos['alergias'], $datos['enfermedades_base'], $foto, $datos['id_jugador']);
-            $stmt->send_long_data(11, $foto);
+
+        if ($incluye_foto) {$null = null;
+            // 13 parámetros: 11 campos + 1 foto (b) + 1 id_jugador (i)
+            // Tipos: s s s s s i s s s s s b i
+            $stmt->bind_param("sssssisssssbi", 
+                $datos['apellido'], 
+                $datos['nombre'],$datos['CI'], 
+                $datos['fecha_nac'],$datos['nro_contacto'], 
+                $datos['genero'],$datos['direccion'], 
+                $datos['lugar_nac'],$datos['tipo_sangre'], 
+                $datos['alergias'],$datos['enfermedades_base'], 
+                $null,$datos['id_jugador']
+            );
+            
+            // Indice 11 correspondiente al parametro 'b' de foto
+            $stmt->send_long_data(11,$foto);
         } else {
-            $stmt->bind_param("sssssissssssi", $datos['apellido'], $datos['nombre'], $datos['CI'], $datos['fecha_nac'], $datos['nro_contacto'], $datos['genero'], $datos['direccion'], $datos['lugar_nac'], $datos['tipo_sangre'], $datos['alergias'], $datos['enfermedades_base'], $datos['id_jugador']);
+            // 12 parámetros: 11 campos + 1 id_jugador (i)
+            // Tipos: s s s s s i s s s s s i
+            $stmt->bind_param("sssssisssssi", 
+                $datos['apellido'],$datos['nombre'], 
+                $datos['CI'],$datos['fecha_nac'], 
+                $datos['nro_contacto'],$datos['genero'], 
+                $datos['direccion'],$datos['lugar_nac'], 
+                $datos['tipo_sangre'],$datos['alergias'], 
+                $datos['enfermedades_base'],$datos['id_jugador']
+            );
         }
+
         return $stmt->execute();
     }
 
@@ -81,7 +102,7 @@ class jugadores {
         return $this->db->query($sql);
     }
 
-    public function cambiarEstado($id, $estado) {
+    public function cambiarEstado($id,$estado) {
         $id = (int)$id;
         $estado = (int)$estado;
         $sql = "UPDATE `Jugadores` SET `activo` = $estado WHERE `id_jugador` = $id";
@@ -93,23 +114,30 @@ class jugadores {
         return $this->db->query($sql);
     }
 
-    public function getCategoriaByEdad($fecha_nac) {
-        $fecha = new DateTime($fecha_nac);
-        $hoy = new DateTime();
-        $edad = (int)$hoy->diff($fecha)->y;
+public function getCategoriaByEdad($fecha_nac) {
+    if (empty($fecha_nac)) {
+        return ['id' => 0, 'nombre' => 'Sin categoría'];
+    }
 
-        $sql = "SELECT id_categoria, nombre FROM `Categoria`
-            WHERE $edad >= edad_min AND $edad <= edad_max
+    $fecha = new DateTime($fecha_nac);
+    $hoy   = new DateTime();$edad  = (int)$hoy->diff($fecha)->y;
+
+    // Se agregan espacios claros entre variables y palabras clave de SQL
+    $sql = "SELECT id_categoria, nombre 
+            FROM `Categoria`
+            WHERE ? >= edad_min AND ? <= edad_max
             ORDER BY edad_min ASC
             LIMIT 1";
 
-        $rs  = $this->db->query($sql);
-        $row = $rs ? $rs->fetch_assoc() : null;
+    $stmt =$this->db->prepare($sql);$stmt->bind_param("ii", $edad,$edad);
+    $stmt->execute();$rs  = $stmt->get_result();$row = $rs ? $rs->fetch_assoc() : null;
 
-        if (!$row) return ['id' => 0, 'nombre' => 'Sin categoría'];
-
-        return ['id' => (int)$row['id_categoria'], 'nombre' => $row['nombre']];
+    if (!$row) {
+        return ['id' => 0, 'nombre' => 'Sin categoría'];
     }
+
+    return ['id' => (int)$row['id_categoria'], 'nombre' =>$row['nombre']];
+}
 
     public function getGeneroSlug($genero) {
         switch ((int)$genero) {
@@ -120,8 +148,7 @@ class jugadores {
         }
     }
 
-    public function getFiltered($id_categoria, $id_genero) {
-        $where = [];
+    public function getFiltered($id_categoria, $id_genero) {$where = [];
         if ($id_genero) {
             $where[] = "j.genero = $id_genero";
         }
