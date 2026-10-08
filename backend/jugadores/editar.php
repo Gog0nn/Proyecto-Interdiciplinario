@@ -13,73 +13,85 @@ if (!$id) {
     exit;
 }
 
+// Cálculo de límites para la fecha de nacimiento (entre 5 y 80 años)
+$hace80Anos = date('Y-m-d', strtotime('-80 years'));
+$hace5Anos  = date('Y-m-d', strtotime('-5 years'));
+
+$errores = [];
+
 // Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $hasFoto = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
+    
+    // 1. Validaciones del servidor mediante el archivo validar_jugador.php
+    include_once __DIR__ . "/validar_jugador.php";
+    $errores = validarJugador($_POST);
 
+    // Validación de foto si fue adjuntada
+    $hasFoto = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
     if ($hasFoto) {
         $fotoError = $_FILES['foto']['error'];
         $fotoSize  = $_FILES['foto']['size'];
         $tmpName   = $_FILES['foto']['tmp_name'];
 
         if ($fotoError !== UPLOAD_ERR_OK || $fotoSize > 2 * 1024 * 1024 || empty($tmpName) || @getimagesize($tmpName) === false) {
-            header('Location: editar.php?id_jugador=' . $id . '&error=foto');
+            $errores[] = "La foto debe ser una imagen válida de hasta 2 MB.";
+        }
+    }
+
+    // 2. Si no hay errores de validación, procedemos a guardar
+    if (empty($errores)) {
+        $datos = [
+            'id_jugador'        => $id,
+            'apellido'          => $_POST['apellido']          ?? '',
+            'nombre'            => $_POST['nombre']            ?? '',
+            'CI'                => $_POST['CI']                ?? '',
+            'fecha_nac'         => $_POST['fecha_nac']         ?? '',
+            'nro_contacto'      => $_POST['nro_contacto']      ?? '',
+            'genero'            => $_POST['genero']            ?? 0,
+            'direccion'         => $_POST['direccion']         ?? '',
+            'lugar_nac'         => $_POST['lugar_nac']         ?? '',
+            'tipo_sangre'       => $_POST['tipo_sangre']       ?? '',
+            'alergias'          => $_POST['alergias']          ?? '',
+            'enfermedades_base' => $_POST['enfermedades_base'] ?? '',
+        ];
+
+        if ($hasFoto && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+            $datos['foto'] = file_get_contents($_FILES['foto']['tmp_name']);
+        }
+
+        $relaciones = json_decode($_POST['tutor_relaciones'] ?? '[]', true);
+        $ok = false;
+
+        try {
+            $con->begin_transaction();
+            $ok = $jugador->update($datos);
+            if (!$ok) {
+                throw new RuntimeException('No se pudo actualizar el jugador.');
+            }
+            $tutores->guardarRelaciones($id, $relaciones);
+            $con->commit();
+            
+            header('Location: index.php?ok=' . ($ok ? 2 : 0));
             exit;
+        } catch (Throwable $error) {
+            $con->rollback();
+            $errores[] = "Error al guardar los cambios: " . $error->getMessage();
         }
     }
-
-    $datos = [
-        'id_jugador'        => $id,
-        'apellido'          => $_POST['apellido']          ?? '',
-        'nombre'            => $_POST['nombre']            ?? '',
-        'CI'                => $_POST['CI']                ?? '',
-        'fecha_nac'         => $_POST['fecha_nac']         ?? '',
-        'nro_contacto'      => $_POST['nro_contacto']      ?? '',
-        'genero'            => $_POST['genero']            ?? 0,
-        'direccion'         => $_POST['direccion']         ?? '',
-        'lugar_nac'         => $_POST['lugar_nac']         ?? '',
-        'tipo_sangre'       => $_POST['tipo_sangre']       ?? '',
-        'alergias'          => $_POST['alergias']          ?? '',
-        'enfermedades_base' => $_POST['enfermedades_base'] ?? '',
-    ];
-
-    // Solo adjuntar si se subió una nueva foto válida
-    if ($hasFoto && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $datos['foto'] = file_get_contents($_FILES['foto']['tmp_name']);
-    }
-
-    $relaciones = json_decode($_POST['tutor_relaciones'] ?? '[]', true);
-    $ok = false;
-
-    try {
-        $con->begin_transaction();
-        $ok = $jugador->update($datos);
-        if (!$ok) {
-            throw new RuntimeException('No se pudo actualizar el jugador.');
-        }
-        $tutores->guardarRelaciones($id, $relaciones);
-        $con->commit();
-    }catch (Throwable $error) {
-        $con->rollback();
-        echo '<div style="background:#f8d7da; color:#842029; padding:20px; margin:20px; border-radius:8px; font-family:monospace; border:1px solid #f5c2c7;">';
-        echo '<h3 style="margin-top:0;">❌ Error detectado al guardar</h3>';
-        echo '<p><strong>Mensaje:</strong> ' . htmlspecialchars($error->getMessage()) . '</p>';
-        echo '<p><strong>Archivo:</strong> ' . htmlspecialchars($error->getFile()) . ' (Línea ' . $error->getLine() . ')</p>';
-        echo '</div>';
-        exit;
-    }
-
-    header('Location: index.php?ok=' . ($ok ? 2 : 0));
-    exit;
 }
 
-// Cargar datos del jugador
+// Cargar datos del jugador (o recuperar los enviados si hubo un error)
 $rs   = $jugador->getByID($id);
 $fila = $rs ? $rs->fetch_assoc() : null;
 
 if (!$fila) {
     header('Location: index.php');
     exit;
+}
+
+// Si hubo un error en la validación POST, conservamos los datos que intentó enviar el usuario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $fila = array_merge($fila, $_POST);
 }
 
 // Obtener relaciones completas para prellenar el módulo de tutores.
@@ -99,51 +111,62 @@ while ($row = $result->fetch_assoc()) {
     <h3 class="mb-0">Editar jugador</h3>
 </div>
 
-<?php if (isset($_GET['error'])): ?>
+<!-- Mostrar errores de validación si existen -->
+<?php if (!empty($errores)): ?>
     <div class="alert alert-danger" role="alert">
-        <?php if ($_GET['error'] === 'foto'): ?>
-            La foto debe ser una imagen válida de hasta 2 MB.
-        <?php else: ?>
-            No se pudo guardar el jugador. Revisa los datos y el registro del servidor.
-        <?php endif; ?>
+        <ul class="mb-0">
+            <?php foreach ($errores as $err): ?>
+                <li><?= htmlspecialchars($err) ?></li>
+            <?php endforeach; ?>
+        </ul>
     </div>
 <?php endif; ?>
 
 <div class="d-flex justify-content-center w-100 my-4">
     <div class="card shadow-sm mx-auto" style="max-width: 900px; width: 100%;">
         <div class="card-body">
-            <!-- 'novalidate' evita el choque de HTML5 con inputs ocultos -->
-            <form method="POST" enctype="multipart/form-data" novalidate>
+            <form method="POST" enctype="multipart/form-data">
                 <div class="row g-3">
 
+                    <!-- Apellido: Solo letras y espacios -->
                     <div class="col-6">
                         <label class="form-label">Apellido</label>
                         <input type="text" name="apellido" class="form-control"
-                               value="<?= htmlspecialchars($fila['apellido'] ?? '') ?>" required>
+                               value="<?= htmlspecialchars($fila['apellido'] ?? '') ?>" required
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="El apellido solo debe contener letras y espacios">
                     </div>
 
+                    <!-- Nombre: Solo letras y espacios -->
                     <div class="col-6">
                         <label class="form-label">Nombre</label>
                         <input type="text" name="nombre" class="form-control"
-                               value="<?= htmlspecialchars($fila['nombre'] ?? '') ?>" required>
+                               value="<?= htmlspecialchars($fila['nombre'] ?? '') ?>" required
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="El nombre solo debe contener letras y espacios">
                     </div>
 
+                    <!-- CI: Solo números -->
                     <div class="col-6">
                         <label class="form-label">CI</label>
                         <input type="text" name="CI" class="form-control"
-                               value="<?= htmlspecialchars($fila['CI'] ?? '') ?>" required>
+                               value="<?= htmlspecialchars($fila['CI'] ?? '') ?>" required
+                               pattern="[0-9]+" title="La CI solo debe contener números">
                     </div>
 
+                    <!-- Fecha de Nacimiento: Rango de 5 a 80 años -->
                     <div class="col-6">
                         <label class="form-label">Fecha de nacimiento</label>
                         <input type="date" name="fecha_nac" class="form-control"
-                               value="<?= htmlspecialchars($fila['fecha_nac'] ?? '') ?>" required>
+                               value="<?= htmlspecialchars($fila['fecha_nac'] ?? '') ?>" required
+                               min="<?= $hace80Anos ?>" max="<?= $hace5Anos ?>"
+                               title="La edad debe estar entre 5 y 80 años">
                     </div>
 
+                    <!-- Nro. contacto: Solo números -->
                     <div class="col-6">
                         <label class="form-label">Nro. contacto</label>
                         <input type="text" name="nro_contacto" class="form-control"
-                               value="<?= htmlspecialchars($fila['nro_contacto'] ?? '') ?>">
+                               value="<?= htmlspecialchars($fila['nro_contacto'] ?? '') ?>"
+                               pattern="[0-9]+" title="El número de contacto solo debe contener números">
                     </div>
 
                     <div class="col-6">
@@ -154,10 +177,12 @@ while ($row = $result->fetch_assoc()) {
                         </select>
                     </div>
 
+                    <!-- Dirección: Letras, números, espacios y la barra '/' -->
                     <div class="col-12">
                         <label class="form-label">Dirección</label>
                         <input type="text" name="direccion" class="form-control"
-                               value="<?= htmlspecialchars($fila['direccion'] ?? '') ?>">
+                               value="<?= htmlspecialchars($fila['direccion'] ?? '') ?>"
+                               pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\/]+" title="La dirección solo admite letras, números, espacios y '/'">
                     </div>
 
                     <div class="col-6">
