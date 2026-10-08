@@ -38,6 +38,9 @@ function validarTutor($data) {
     } elseif (function_exists('soloNumeros') ? !soloNumeros($contacto) : !preg_match('/^[0-9]+$/', $contacto)) {
         $errores[] = "El contacto solo debe contener números (sin letras ni caracteres especiales)";
     }
+    if(esNumero($contacto) === false){
+        $errores[] = "El contacto solo puede contener números";
+    }
 
     return $errores;
 }

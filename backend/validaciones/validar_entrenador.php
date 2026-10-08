@@ -44,11 +44,15 @@ function validarEntrenador($data) {
         }
     }
 
+
     // NRO CONTACTO
     if (!campoRequerido($nro_contacto)) {
         $errores[] = "El número de contacto es obligatorio";
     } elseif (!longitudMaxima($nro_contacto, 50)) {
         $errores[] = "El número de contacto no puede superar 50 caracteres";
+    }
+    if(EsNumero($nro_contacto) === false){
+        $errores[] = "El número de contacto solo puede contener números";
     }
 
     // CI

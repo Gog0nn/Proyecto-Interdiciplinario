@@ -58,6 +58,7 @@ if (!empty($fila['jugador_ids'])) {
                     <div class="col-12">
                         <label for="contacto" class="form-label">Contacto (Teléfono)</label>
                         <input type="text" id="contacto" name="contacto" maxlength="100"
+ HEAD
                             class="form-control" value="<?php echo htmlspecialchars($fila['contacto'] ?? ''); ?>" required
                             pattern="[0-9]+" title="El número de teléfono solo debe contener números">
                     </div>
@@ -77,6 +78,8 @@ if (!empty($fila['jugador_ids'])) {
                             <?php endif; ?>
                         </select>
                         <small class="text-muted">Mantenga presionada la tecla <kbd>Ctrl</kbd> (o <kbd>Cmd</kbd> en Mac) para seleccionar varios jugadores.</small>
+                            class="form-control" value="<?php echo htmlspecialchars($fila['contacto'] ?? ''); ?>" placeholder="981123456" required>
+c3b7d97b5ae5dbbcc460f69144309ff9f7e893d8
                     </div>
 
                     <div class="col-12 d-flex gap-2 mt-3">
